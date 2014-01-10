@@ -1,5 +1,25 @@
-"show line numbers"
-set number
+"disable arrow keys - force learn hjkl"
+map <Left> <nop>
+map <Right> <nop>
+map <Up> <nop>
+map <Down> <nop>
+
+"Function to toggle from number to relative number"
+function! NumberToggle()
+    if(&relativenumber == 1)
+        set number
+    else
+        set relativenumber
+    endif
+endfunc
+
+nnoremap <F3> :call NumberToggle()<cr>
+:au FocusLost * :set number
+:au FocusGained * :set relativenumber
+autocmd InsertEnter * :set number
+autocmd InsertLeave * :set relativenumber
+"set default numbering"
+set relativenumber
 " allow colors to work for powerline"
 set t_Co=256
 " change theme to easier reading "
@@ -100,7 +120,7 @@ let g:pymode_folding = 0
 " End Python-mode----------------------------------------------------
 
 " Use l to toggle display of whitespace
-nmap l :set list!
+nmap  L :set list!
 " And set some nice chars to do it with
 set listchars=tab:»\ ,eol:¬
 " automatically change window's cwd to file's dir
