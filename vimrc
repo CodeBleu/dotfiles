@@ -40,13 +40,15 @@ set softtabstop=4
 set nocompatible
 filetype off
 
+set rtp+=$HOME/.vim/bundle/powerline/powerline/bindings/vim/
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 " let Vundle manage Vundle
 " required!
 Bundle 'gmarik/vundle'
-Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+" Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+Bundle 'Lokaltog/powerline'
 Bundle 'klen/python-mode'
 Bundle 'davidhalter/jedi-vim'
 Bundle 'scrooloose/nerdtree'
@@ -119,8 +121,8 @@ let g:pymode_folding = 0
 
 " End Python-mode----------------------------------------------------
 
-" Use l to toggle display of whitespace
-nmap  L :set list!
+" Use L to toggle display of whitespace
+nmap L :set list!
 " And set some nice chars to do it with
 set listchars=tab:»\ ,eol:¬
 " automatically change window's cwd to file's dir
