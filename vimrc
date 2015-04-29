@@ -3,23 +3,26 @@ map <Left> <nop>
 map <Right> <nop>
 map <Up> <nop>
 map <Down> <nop>
+if version >= 703
+    "Function to toggle from number to relative number"
+    function! NumberToggle()
+        if(&relativenumber == 1)
+            set number
+        else
+            set relativenumber
+        endif
+    endfunc
 
-"Function to toggle from number to relative number"
-function! NumberToggle()
-    if(&relativenumber == 1)
-        set number
-    else
-        set relativenumber
-    endif
-endfunc
-
-nnoremap <F3> :call NumberToggle()<cr>
-:au FocusLost * :set number
-:au FocusGained * :set relativenumber
-autocmd InsertEnter * :set number
-autocmd InsertLeave * :set relativenumber
-"set default numbering"
-set relativenumber
+    nnoremap <F3> :call NumberToggle()<cr>
+    :au FocusLost * :set number
+    :au FocusGained * :set relativenumber
+    autocmd InsertEnter * :set number
+    autocmd InsertLeave * :set relativenumber
+    "set default numbering"
+    set relativenumber
+else
+    set number
+endif
 " allow colors to work for powerline"
 set t_Co=256
 " change theme to easier reading "
