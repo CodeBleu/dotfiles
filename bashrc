@@ -14,10 +14,29 @@ if [[ $- != *i* ]] ; then
 	return
 fi
 
+PROMPT_DIRTRIM=2
 
 # Put your fun stuff here.
+
+txtcyn='\e[0;36m' #cyan
+txtblu='\e[0;34m' #blue
+txtgrn='\e[0;32m' #green
+txtwht='\e[0;37m' #white
+Iblu='\e[0;94m' #High Intensity Blu
+Icyn='\e[0;96m' #High Intensity Cyan
+Iwht='\e[0;97m' #High Intensity White
+
+
+export POWERLINE_CONFIG_COMMAND=$HOME/.vim/bundle/powerline/scripts/powerline-config
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/development/python
 source /usr/bin/virtualenvwrapper.sh
 
-alias nudav="sudo emerge -NuDav world"
+alias git="hub"
+
+
+if [ `lsb_release -i | grep -ioP '(?<=distributor\sid\:\s)(\w*)'` = 'Gentoo' ]; then
+    export PS1="\[${Iblu}\][\[${txtcyn}\]\u\[${Iblu}\]@\[${txtgrn}\]\h\[${Icyn}\] \w\[${Iblu}\] ] \[${Iblu}\]\\$ \[${txtwht}\]"
+    alias nudav="sudo emerge -NuDav world"
+fi
+
