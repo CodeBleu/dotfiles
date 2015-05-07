@@ -36,7 +36,11 @@ alias git="hub"
 
 
 if [ `lsb_release -i | grep -ioP '(?<=distributor\sid\:\s)(\w*)'` = 'Gentoo' ]; then
-    export PS1="\[${Iblu}\][\[${txtcyn}\]\u\[${Iblu}\]@\[${txtgrn}\]\h\[${Icyn}\] \w\[${Iblu}\] ] \[${Iblu}\]\\$ \[${txtwht}\]"
+    
+    gitprompt='~/development/bash/git-prompt.sh'
+    
+    export PS1="\[${Iblu}\][\[${txtcyn}\]\u\[${Iblu}\]@\[${txtgrn}\]\h\[${Icyn}\] \w\[${Iblu}\] ]\[${txtwht}\$($gitprompt) \[${Iblu}\]\\$ \[${txtwht}\]"
+    
     alias nudav="sudo emerge -NuDav world"
 fi
 
