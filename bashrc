@@ -34,12 +34,12 @@ source /usr/bin/virtualenvwrapper.sh
 
 alias git="hub"
 
+gitprompt='~/development/bash/git-prompt.sh'
+if [ `tput -T $TERM colors` = 256 ]; then
+    export PS1="\[${Iblu}\][\[${txtcyn}\]\u\[${Iblu}\]@\[${txtgrn}\]\h\[${Icyn}\] \w\[${Iblu}\] ]\[${txtwht}\$($gitprompt) \[${Iblu}\]\\$ \[${txtwht}\]"
+fi
 
 if [ `lsb_release -i | grep -ioP '(?<=distributor\sid\:\s)(\w*)'` = 'Gentoo' ]; then
-    
-    gitprompt='~/development/bash/git-prompt.sh'
-    
-    export PS1="\[${Iblu}\][\[${txtcyn}\]\u\[${Iblu}\]@\[${txtgrn}\]\h\[${Icyn}\] \w\[${Iblu}\] ]\[${txtwht}\$($gitprompt) \[${Iblu}\]\\$ \[${txtwht}\]"
     
     alias nudav="sudo emerge -NuDav world"
 fi
