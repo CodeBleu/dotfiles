@@ -23,10 +23,12 @@ if version >= 703
 else
     set number
 endif
+
 " allow colors to work for powerline"
 set t_Co=256
 " change theme to easier reading "
-color desert 
+set background=dark
+colorscheme solarized
 "allow backspace to remove all spaces of 'tab'"
 set softtabstop=4
 " Press Space to turn off highlighting and clear any message already
