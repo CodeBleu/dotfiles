@@ -55,6 +55,7 @@ Bundle 'Lokaltog/powerline'
 Bundle 'klen/python-mode'
 Bundle 'davidhalter/jedi-vim'
 Bundle 'scrooloose/nerdtree'
+Bundle 'tcomment'
 " The bundles you install will be listed here
 
 filetype plugin indent on
