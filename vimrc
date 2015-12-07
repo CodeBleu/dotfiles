@@ -26,9 +26,6 @@ endif
 
 " allow colors to work for powerline"
 set t_Co=256
-" change theme to easier reading "
-set background=dark
-colorscheme solarized
 "allow backspace to remove all spaces of 'tab'"
 set softtabstop=4
 " Press Space to turn off highlighting and clear any message already
@@ -47,18 +44,24 @@ filetype off
 
 set rtp+=$HOME/.vim/bundle/powerline/powerline/bindings/vim/
 set rtp+=~/.vim/bundle/vundle/
+
 call vundle#rc()
 
 " let Vundle manage Vundle
 " required!
 Bundle 'gmarik/vundle'
+" The bundles you install will be listed here
 " Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 Bundle 'Lokaltog/powerline'
 Bundle 'klen/python-mode'
 Bundle 'davidhalter/jedi-vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tcomment'
-" The bundles you install will be listed here
+Bundle 'Solarized'
+
+" change theme to easier reading "
+set background=dark
+colorscheme solarized
 
 filetype plugin indent on
 
