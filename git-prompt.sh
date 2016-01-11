@@ -1,7 +1,8 @@
 #!/bin/bash
+gitrepo=`git rev-parse --is-inside-work-tree 2>/dev/null`
 
-
-if [ -d ".git" ]; then
+# if [ -d ".git" ]; then
+if [ $gitrepo ]; then
     branch="`git branch -a | awk '/\*/ {print $2 }'`"
     if [ `git status | grep -ic 'clean'` = 1 ]; then
         echo "("$branch" $(tput setaf 2)✔$(tput sgr0))"
