@@ -58,6 +58,17 @@ Plugin 'davidhalter/jedi-vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'tcomment'
 Plugin 'Solarized'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'artur-shaik/vim-javacomplete2'
+Plugin 'SirVer/ultisnips'
+Plugin 'Raimondi/delimitMate'
+Plugin 'honza/vim-snippets'
+Plugin 'tpope/vim-surround'
+
+" Needed for javacomplete2
+autocmd FileType java setlocal omnifunc=javacomplete#Complete
+
 
 " change theme to easier reading "
 set background=dark
@@ -81,6 +92,14 @@ set laststatus=2
 "NeardTREE
 map  <F2> :NERDTreeToggle
 "End NerdTREE
+
+"Syntastic Settings
+let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
+let g:syntastic_enable_signs=1
+let g:syntastic_java_checkers=['javac']
+let g:syntastic_javac_config_file_enabled = 1
+let g:syntastic_auto_loc_list=1
+let g:syntastic_auto_jump=0
 
 
 " Python-mode
@@ -126,7 +145,7 @@ let g:pymode_syntax_indent_errors = g:pymode_syntax_all
 let g:pymode_syntax_space_errors = g:pymode_syntax_all
 
 " Don't autofold code
-let g:pymode_folding = 0
+" let g:pymode_folding = 0
 
 " End Python-mode----------------------------------------------------
 
