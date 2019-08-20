@@ -163,3 +163,8 @@ set expandtab
 if has ('gui_running')
     highlight Pmenu guibg=#cccccc gui=bold
     endif
+
+" Change default behavior of 'gf' Goto File to split mode instead of current
+" window   
+ nnoremap gf <C-W>f
+ vnoremap gf <C-W>f
