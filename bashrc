@@ -13,7 +13,7 @@ if [[ $- != *i* ]] ; then
 	# Shell is non-interactive.  Be done now!
 	return
 fi
-
+HISTCONTROL=ignoreboth
 PROMPT_DIRTRIM=2
 
 # Put your fun stuff here.
@@ -25,22 +25,25 @@ txtwht='\e[0;37m' #white
 Iblu='\e[0;94m' #High Intensity Blu
 Icyn='\e[0;96m' #High Intensity Cyan
 Iwht='\e[0;97m' #High Intensity White
+reset=$(tput sgr0)
 
-
-export POWERLINE_CONFIG_COMMAND=$HOME/.vim/bundle/powerline/scripts/powerline-config
+# . ~/.vim/bundle/powerline/powerline/bindings/bash/powerline.sh
+# export POWERLINE_CONFIG_COMMAND=$HOME/.vim/bundle/powerline/scripts/powerline-config
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/development/python
 source /usr/bin/virtualenvwrapper.sh
 
-alias git="hub"
+alias mandom="man \`find /usr/share/man -type f | shuf | head -1\`"
+alias mount="mount | column -t"
 
 gitprompt='~/development/bash/git-prompt.sh'
 if [ `tput -T $TERM colors` = 256 ]; then
-    export PS1="\[${Iblu}\][\[${txtcyn}\]\u\[${Iblu}\]@\[${txtgrn}\]\h\[${Icyn}\] \w\[${Iblu}\] ]\[${txtwht}\$($gitprompt) \[${Iblu}\]\\$ \[${txtwht}\]"
+    export PS1="\[${Iblu}\][\[${txtcyn}\]\u\[${Iblu}\]@\[${txtgrn}\]\h\[${Icyn}\] \w\[${Iblu}\] ]\[${txtwht}\$($gitprompt) \[${Iblu}\]\\$\[${reset}\] "
 fi
 
 if [ `lsb_release -i | grep -ioP '(?<=distributor\sid\:\s)(\w*)'` = 'Gentoo' ]; then
     
-    alias nudav="sudo emerge -NuDav world"
+    alias nudav="sudo emerge -NuDav @world"
+
 fi
 
