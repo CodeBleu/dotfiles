@@ -13,7 +13,7 @@ if [[ $- != *i* ]] ; then
 	# Shell is non-interactive.  Be done now!
 	return
 fi
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth:erasedups
 PROMPT_DIRTRIM=2
 
 # Put your fun stuff here.
