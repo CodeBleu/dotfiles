@@ -29,6 +29,7 @@ reset=$(tput sgr0)
 
 # . ~/.vim/bundle/powerline/powerline/bindings/bash/powerline.sh
 # export POWERLINE_CONFIG_COMMAND=$HOME/.vim/bundle/powerline/scripts/powerline-config
+
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/development/python
 source /usr/bin/virtualenvwrapper.sh
@@ -44,6 +45,11 @@ fi
 if [ `lsb_release -i | grep -ioP '(?<=distributor\sid\:\s)(\w*)'` = 'Gentoo' ]; then
     
     alias nudav="sudo emerge -NuDav @world"
+    export NUMCPUS=$(nproc)
+    export NUMCPUSPLUSONE=$((NUMCPUS + 1 ))
+    export MAKEOPTS="-j${NUMCPUSPLUSONE} -l${NUMCPUS}"
+    export EMERGE_DEFAULT_OPTS="--jobs=${NUMCPUSPLUSONE} --load-average=${NUMCPUS}"
+
 
 fi
 
