@@ -159,6 +159,10 @@ set autochdir
 set tabstop=4
 set shiftwidth=4
 set expandtab
+" Settings for yaml files
+au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
 " more subtle popup colors
 if has ('gui_running')
     highlight Pmenu guibg=#cccccc gui=bold
