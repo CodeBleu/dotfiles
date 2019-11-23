@@ -7,17 +7,15 @@ if version >= 703
     "Function to toggle from number to relative number"
     function! NumberToggle()
         if(&relativenumber == 1)
-            set number
+            set norelativenumber | set number
         else
-            set relativenumber
+            set relativenumber | set nonumber
         endif
     endfunc
 
     nnoremap <F3> :call NumberToggle()<cr>
-    :au FocusLost * :set number
-    :au FocusGained * :set relativenumber
-    autocmd InsertEnter * :set number
-    autocmd InsertLeave * :set relativenumber
+    autocmd InsertEnter * :set nonumber | :set norelativenumber | :set number 
+    autocmd InsertLeave * :set norelativenumber | :set nonumber | :set relativenumber
     "set default numbering"
     set relativenumber
 else
@@ -35,7 +33,6 @@ set softtabstop=4
 :hi Search ctermbg=23
 
 
-
 "-----------------------------------------------------------
 " vim as python ide below 
 "-----------------------------------------------------------
@@ -51,7 +48,6 @@ call vundle#rc()
 " required!
 Plugin 'VundleVim/Vundle.vim'
 " The bundles you install will be listed here
-" Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 Plugin 'powerline/powerline'
 Plugin 'klen/python-mode'
 Plugin 'davidhalter/jedi-vim'
@@ -90,7 +86,7 @@ set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
 set laststatus=2
 
 "NeardTREE
-map  <F2> :NERDTreeToggle
+map  <F2> :NERDTreeToggle<cr>
 "End NerdTREE
 
 "Syntastic Settings
