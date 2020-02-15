@@ -145,8 +145,9 @@ let g:pymode_syntax_space_errors = g:pymode_syntax_all
 
 " End Python-mode----------------------------------------------------
 
-" Use L to toggle display of whitespace
-nmap L :set list!
+" Use ,l to toggle display of whitespace
+" Don't map L as it is a standard motion key (LOW)
+nmap ,l :set list!
 " And set some nice chars to do it with
 set listchars=tab:»\ ,eol:¬
 " automatically change window's cwd to file's dir
