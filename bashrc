@@ -17,32 +17,42 @@ HISTCONTROL=ignoreboth:erasedups
 PROMPT_DIRTRIM=2
 
 # Put your fun stuff here.
+# Fix long line wrapping issues: https://askubuntu.com/questions/111840/ps1-problem-messing-up-cli
+#                                https://askubuntu.com/questions/251154/long-lines-overlap-in-bash-ps1-customized-prompt
 
-txtcyn='\e[0;36m' #cyan
-txtblu='\e[0;34m' #blue
-txtgrn='\e[0;32m' #green
-txtwht='\e[0;37m' #white
-Iblu='\e[0;94m' #High Intensity Blu
-Icyn='\e[0;96m' #High Intensity Cyan
-Iwht='\e[0;97m' #High Intensity White
-reset=$(tput sgr0)
+txtcyn='\[\e[36m\]' #cyan
+txtblu='\[\e[34m\]' #blue
+txtgrn='\[\e[32m\]' #green
+txtwht='\[\e[37m\]' #white
+Iblu='\[\e[94m\]' #High Intensity Blu
+Icyn='\[\e[96m\]' #High Intensity Cyan
+Iwht='\[\e[97m\]' #High Intensity White
+reset='\[\e[m\]'
 
 # . ~/.vim/bundle/powerline/powerline/bindings/bash/powerline.sh
 # export POWERLINE_CONFIG_COMMAND=$HOME/.vim/bundle/powerline/scripts/powerline-config
 
-export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/development/python
-source /usr/bin/virtualenvwrapper.sh
+if [[ -f /usr/bin/virtualenvwrapper.sh ]]; then
+    export WORKON_HOME=$HOME/.virtualenvs
+    export PROJECT_HOME=$HOME/development/python
+    source /usr/bin/virtualenvwrapper.sh
+fi
 
 alias mandom="man \`find /usr/share/man -type f | shuf | head -1\`"
 alias mount="mount | column -t"
 
-gitprompt='~/development/bash/git-prompt.sh'
-if [ `tput -T $TERM colors` = 256 ]; then
-    export PS1="\[${Iblu}\][\[${txtcyn}\]\u\[${Iblu}\]@\[${txtgrn}\]\h\[${Icyn}\] \w\[${Iblu}\] ]\[${txtwht}\$($gitprompt) \[${Iblu}\]\\$\[${reset}\] "
+GP_FILE=~/development/bash/git-prompt.sh
+gitprompt='$GP_FILE'
+
+if [[ `tput -T $TERM colors` = 256 ]]; then
+    if [ -f "$GP_FILE" ]; then
+        export PS1="${Iblu}[${txtcyn}\u${Iblu}@${txtgrn}\h${Icyn} \w${Iblu} ]\$($gitprompt)${Iblu} \\$ ${reset}"
+    else
+        export PS1="${Iblu}[${txtcyn}\u${Iblu}@${txtgrn}\h${Icyn} \w${Iblu} ] \\$ ${reset}"
+    fi
 fi
 
-if [ `lsb_release -i | grep -ioP '(?<=distributor\sid\:\s)(\w*)'` = 'Gentoo' ]; then
+if [[ `lsb_release -i | grep -ioP '(?<=distributor\sid\:\s)(\w*)'` = 'Gentoo' ]]; then
     
     alias nudav="sudo emerge -NuDav @world"
     export NUMCPUS=$(nproc)
@@ -52,4 +62,3 @@ if [ `lsb_release -i | grep -ioP '(?<=distributor\sid\:\s)(\w*)'` = 'Gentoo' ]; 
 
 
 fi
-
