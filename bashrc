@@ -15,6 +15,7 @@ if [[ $- != *i* ]] ; then
 fi
 HISTCONTROL=ignoreboth:erasedups
 PROMPT_DIRTRIM=2
+export EDITOR=/usr/bin/vim
 
 # Put your fun stuff here.
 # Fix long line wrapping issues: https://askubuntu.com/questions/111840/ps1-problem-messing-up-cli
