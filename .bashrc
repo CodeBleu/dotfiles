@@ -45,12 +45,18 @@ alias mount="mount | column -t"
 GP_FILE=~/development/bash/git-prompt.sh
 gitprompt='$GP_FILE'
 
-if [[ `tput -T $TERM colors` = 256 ]]; then
+if (( `tput -T $TERM colors` >= 8 )); then
     if [ -f "$GP_FILE" ]; then
         export PS1="${Iblu}[${txtcyn}\u${Iblu}@${txtgrn}\h${Icyn} \w${Iblu} ]\$($gitprompt)${Iblu} \\$ ${reset}"
     else
         export PS1="${Iblu}[${txtcyn}\u${Iblu}@${txtgrn}\h${Icyn} \w${Iblu} ] \\$ ${reset}"
     fi
+else
+    if [ -f "$GP_FILE" ]; then
+        export PS1="[\u@\h \w ]\$($gitprompt) \\$ "
+    else
+        export PS1="[\u@\h \w ] \\$ "
+    fi 
 fi
 
 if [[ `lsb_release -i | grep -ioP '(?<=distributor\sid\:\s)(\w*)'` = 'Gentoo' ]]; then
