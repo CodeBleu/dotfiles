@@ -22,6 +22,10 @@ else
     set number
 endif
 
+" Read-only odt/odp through odt2txt
+autocmd BufReadPre *.odt,*.odp silent set ro
+autocmd BufReadPost *.odt,*.odp silent %!odt2txt "%"
+
 " allow colors to work for powerline"
 set t_Co=256
 "allow backspace to remove all spaces of 'tab'"
