@@ -69,3 +69,17 @@ if [[ `lsb_release -i | grep -ioP '(?<=distributor\sid\:\s)(\w*)'` = 'Gentoo' ]]
 
 
 fi
+alias gitbbd='for branch in `git branch -r | grep -iv head`; do echo -e `git show --format="%ci %cr" $branch | head -n 1` \\t$branch; done | sort -r'
+alias ls='ls --color=auto'
+
+KERNEL=`uname -a`
+
+if [[ "$KERNEL" =~ "Microsoft" ]]; then
+
+    export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
+    if [[ "$PATH" =~ "VirtualBox" ]]; then
+        :
+    else
+        export PATH="$PATH:/mnt/c/Program Files/Oracle/VirtualBox"
+    fi
+fi
