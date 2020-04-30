@@ -59,7 +59,7 @@ else
     fi 
 fi
 
-if [[ `lsb_release -i | grep -ioP '(?<=distributor\sid\:\s)(\w*)'` = 'Gentoo' ]]; then
+if [[ `cat /etc/lsb-release | grep -ioP '(?<=distrib_id=)(\w*)'` = 'Gentoo' ]]; then
     
     alias nudav="sudo emerge -NuDav @world"
     export NUMCPUS=$(nproc)
@@ -69,6 +69,7 @@ if [[ `lsb_release -i | grep -ioP '(?<=distributor\sid\:\s)(\w*)'` = 'Gentoo' ]]
 
 
 fi
+
 alias gitbbd='for branch in `git branch -r | grep -iv head`; do echo -e `git show --format="%ci %cr" $branch | head -n 1` \\t$branch; done | sort -r'
 alias ls='ls --color=auto'
 
