@@ -65,6 +65,7 @@ Plugin 'SirVer/ultisnips'
 Plugin 'Raimondi/delimitMate'
 Plugin 'honza/vim-snippets'
 Plugin 'tpope/vim-surround'
+Plugin 'pearofducks/ansible-vim'
 
 " Needed for javacomplete2
 autocmd FileType java setlocal omnifunc=javacomplete#Complete
@@ -160,9 +161,9 @@ set autochdir
 set tabstop=4
 set shiftwidth=4
 set expandtab
-" Settings for yaml files
-au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+" Settings for yaml files .ansible is added for ansible-lint
+au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml.ansible foldmethod=manual
+autocmd FileType yaml.ansible setlocal ts=2 sts=2 sw=2 expandtab
 
 " more subtle popup colors
 if has ('gui_running')
