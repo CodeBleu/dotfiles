@@ -103,6 +103,7 @@ let g:syntastic_java_checkers=['javac']
 let g:syntastic_javac_config_file_enabled = 1
 let g:syntastic_auto_loc_list=1
 let g:syntastic_auto_jump=0
+let g:syntastic_yaml_checkers=['yamllint']
 
 
 " Python-mode

@@ -1,6 +1,6 @@
 [user]
-    name = Jason Hollis
-    email = jhollis@jdubb.net
+    name = "Jason Hollis"
+    email = "jhollis@jdubb.net"
 [color]
     ui = true
 [push]
