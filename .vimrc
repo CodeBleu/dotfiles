@@ -1,3 +1,5 @@
+scriptencoding utf-8
+set encoding=utf-8
 "disable arrow keys - force learn hjkl"
 map <Left> <nop>
 map <Right> <nop>
