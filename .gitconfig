@@ -27,3 +27,5 @@
     prune = true
 [apply]
     whitespace = fix
+[pull]
+	ff = only
