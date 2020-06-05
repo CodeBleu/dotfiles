@@ -56,11 +56,11 @@ else
         export PS1="[\u@\h \w ]\$($gitprompt) \\$ "
     else
         export PS1="[\u@\h \w ] \\$ "
-    fi 
+    fi
 fi
 
-if [[ `cat /etc/lsb-release | grep -ioP '(?<=distrib_id=)(\w*)'` = 'Gentoo' ]]; then
-    
+if [[ `cat /etc/lsb-release | grep -ioP '(?<=distrib_id=")(\w*)'` = 'Gentoo' ]]; then
+
     alias nudav="sudo emerge -NuDav @world"
     export NUMCPUS=$(nproc)
     export NUMCPUSPLUSONE=$((NUMCPUS + 1 ))
