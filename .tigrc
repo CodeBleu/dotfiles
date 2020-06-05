@@ -1,3 +1,4 @@
 color date cyan black
 color cursor white cyan bold
-color author 112 black 
+color author 112 black
+set ignore-space = at-eol
