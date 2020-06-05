@@ -16,7 +16,7 @@ if version >= 703
     endfunc
 
     nnoremap <F3> :call NumberToggle()<cr>
-    autocmd InsertEnter * :set nonumber | :set norelativenumber | :set number 
+    autocmd InsertEnter * :set nonumber | :set norelativenumber | :set number
     autocmd InsertLeave * :set norelativenumber | :set nonumber | :set relativenumber
     "set default numbering"
     set relativenumber
@@ -40,7 +40,7 @@ set softtabstop=4
 
 
 "-----------------------------------------------------------
-" vim as python ide below 
+" vim as python ide below
 "-----------------------------------------------------------
 set nocompatible
 filetype off
@@ -153,11 +153,21 @@ let g:pymode_syntax_space_errors = g:pymode_syntax_all
 
 " End Python-mode----------------------------------------------------
 
+" hi EOLWhitespace ctermbg=red
+" match EOLWhitespace /\s\+$/
+
 " Use ,l to toggle display of whitespace
 " Don't map L as it is a standard motion key (LOW)
-nmap ,l :set list!
+" nmap ,l :set list!<CR>
+set list!
+nmap ,l :set list!<CR>
 " And set some nice chars to do it with
-set listchars=tab:»\ ,eol:¬
+" set listchars=tab:»\ ,eol:¬,trail:-
+set listchars=tab:»-,trail:\ ,eol:¬
+" Specialkey is used for highlighing 'trail' above
+" see :help listchars
+hi Specialkey ctermbg=red
+hi NonText ctermfg=blue
 " automatically change window's cwd to file's dir
 set autochdir
 " I'm prefer spaces to tabs
@@ -174,6 +184,6 @@ if has ('gui_running')
     endif
 
 " Change default behavior of 'gf' Goto File to split mode instead of current
-" window   
+" window
  nnoremap gf <C-W>f
  vnoremap gf <C-W>f
