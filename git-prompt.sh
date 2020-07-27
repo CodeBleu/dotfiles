@@ -9,7 +9,7 @@ reset='\e[m'
 # if [ -d ".git" ]; then
 if [ $gitrepo ]; then
     branch="`git branch -a | awk '/\*/ {print $2 }'`"
-    if [ `git status | grep -ic 'clean'` = 1 ]; then
+    if [ `git status | grep -ic 'clean$'` = 1 ]; then
         echo -e "${reset}("$branch" ${txtgrn}✔${reset})"
     else if [ `git status | grep -ic 'unstage'` = 1 ]; then 
         echo -e "${reset}("$branch" ${txtylw}⬖${reset})"
