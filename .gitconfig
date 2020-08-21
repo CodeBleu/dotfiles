@@ -28,4 +28,4 @@
 [apply]
     whitespace = fix
 [pull]
-	ff = only
+    ff = only
