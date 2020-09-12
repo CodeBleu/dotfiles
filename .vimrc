@@ -7,20 +7,30 @@ map <Up> <nop>
 map <Down> <nop>
 if version >= 703
     "Function to toggle from number to relative number"
+    "set Hybrid mode as default
+    set number relativenumber
+
     function! NumberToggle()
         if(&relativenumber == 1)
             set norelativenumber | set number
         else
-            set relativenumber | set nonumber
+            set number relativenumber
         endif
     endfunc
 
     nnoremap <F3> :call NumberToggle()<cr>
-    autocmd InsertEnter * :set nonumber | :set norelativenumber | :set number
-    autocmd InsertLeave * :set norelativenumber | :set nonumber | :set relativenumber
-    "set default numbering"
-    set relativenumber
+
+    "Auto change from hybrid mode to number while turning on cursor and
+    "setting color to lightblue
+    augroup numbertoggle
+        autocmd!
+        autocmd BufEnter,FocusGained,Insertleave,WinEnter * hi CursorLineNr cterm=None ctermfg=lightblue gui=None guifg=lightblue
+        autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu cursorline | endif
+        autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu nocursorline | endif
+    augroup END
+
 else
+    "if version isnt >= 703 set to just number
     set number
 endif
 
