@@ -1,11 +1,13 @@
 scriptencoding utf-8
 set encoding=utf-8
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>
 "disable arrow keys - force learn hjkl"
-map <Left> <nop>
-map <Right> <nop>
-map <Up> <nop>
-map <Down> <nop>
 if version >= 703
+nnoremap <Left> <nop>
+nnoremap <Right> <nop>
+nnoremap <Up> <nop>
+nnoremap <Down> <nop>
     "Function to toggle from number to relative number"
     "set Hybrid mode as default
     set number relativenumber
@@ -103,7 +105,7 @@ set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
 set laststatus=2
 
 "NeardTREE
-map  <F2> :NERDTreeToggle<cr>
+nnoremap  <F2> :NERDTreeToggle<cr>
 "End NerdTREE
 
 "Syntastic Settings
@@ -168,9 +170,8 @@ let g:pymode_syntax_space_errors = g:pymode_syntax_all
 
 " Use ,l to toggle display of whitespace
 " Don't map L as it is a standard motion key (LOW)
-" nmap ,l :set list!<CR>
 set list!
-nmap ,l :set list!<CR>
+nnoremap <leader>l :set list!<CR>
 " And set some nice chars to do it with
 " set listchars=tab:»\ ,eol:¬,trail:-
 set listchars=tab:»-,trail:\ ,eol:¬
