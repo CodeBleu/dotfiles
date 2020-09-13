@@ -1,5 +1,7 @@
 set encoding=utf-8
 scriptencoding utf-8
+let mapleader = ','
+let maplocalleader = '\\'
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 "disable arrow keys - force learn hjkl"
@@ -50,9 +52,6 @@ set softtabstop=4
 " Press Space to turn off highlighting and clear any message already
 " displayed.
 :noremap <F4> :set hlsearch! hlsearch?<CR>
-"set the Background color for highlighted searches"
-:hi Search ctermbg=23
-
 
 "-----------------------------------------------------------
 " vim as python ide below
@@ -83,7 +82,9 @@ Plugin 'Raimondi/delimitMate'
 Plugin 'honza/vim-snippets'
 Plugin 'tpope/vim-surround'
 Plugin 'pearofducks/ansible-vim'
+Plugin 'junegunn/vader.vim'
 
+filetype plugin indent on
 
 " Needed for javacomplete2
 augroup javacomplete2
@@ -95,7 +96,8 @@ augroup END
 set background=dark
 colorscheme solarized
 
-filetype plugin indent on
+"set the Background color for highlighted searches"
+:hi Search cterm=bold ctermfg=grey ctermbg=darkblue
 
 " The rest of your config follows here
 augroup vimrc_autocmds
