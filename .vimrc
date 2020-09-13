@@ -1,9 +1,9 @@
-scriptencoding utf-8
 set encoding=utf-8
+scriptencoding utf-8
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 "disable arrow keys - force learn hjkl"
-if version >= 703
+if v:version >= 703
 nnoremap <Left> <nop>
 nnoremap <Right> <nop>
 nnoremap <Up> <nop>
@@ -37,8 +37,11 @@ else
 endif
 
 " Read-only odt/odp through odt2txt
-autocmd BufReadPre *.odt,*.odp silent set ro
-autocmd BufReadPost *.odt,*.odp silent %!odt2txt "%"
+augroup odt2txt
+    autocmd!
+    autocmd BufReadPre *.odt,*.odp silent set ro
+    autocmd BufReadPost *.odt,*.odp silent %!odt2txt "%"
+augroup END
 
 " allow colors to work for powerline"
 set t_Co=256
@@ -81,9 +84,12 @@ Plugin 'honza/vim-snippets'
 Plugin 'tpope/vim-surround'
 Plugin 'pearofducks/ansible-vim'
 
-" Needed for javacomplete2
-autocmd FileType java setlocal omnifunc=javacomplete#Complete
 
+" Needed for javacomplete2
+augroup javacomplete2
+    autocmd!
+    autocmd FileType java setlocal omnifunc=javacomplete#Complete
+augroup END
 
 " change theme to easier reading "
 set background=dark
@@ -143,7 +149,7 @@ let g:pymode_doc_key = 'K'
 
 "Linting
 let g:pymode_lint = 1
-let g:pymode_lint_checker = "pyflakes,pep8"
+let g:pymode_lint_checker = 'pyflakes,pep8'
 " Auto check on save
 ""let g:pymode_lint_write = 1
 let g:pymode_lint_on_fly = 1
@@ -186,8 +192,11 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 " Settings for yaml files .ansible is added for ansible-lint
-au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml.ansible foldmethod=manual
-autocmd FileType yaml.ansible setlocal ts=2 sts=2 sw=2 expandtab
+augroup ansible-lint
+    autocmd!
+    autocmd BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml.ansible foldmethod=manual
+    autocmd FileType yaml.ansible setlocal ts=2 sts=2 sw=2 expandtab
+augroup END
 
 " more subtle popup colors
 if has ('gui_running')
