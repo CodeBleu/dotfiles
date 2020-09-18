@@ -4,6 +4,7 @@ let mapleader = ','
 let maplocalleader = '\\'
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
+inoremap jk <esc>
 "disable arrow keys - force learn hjkl"
 if v:version >= 703
 nnoremap <Left> <nop>

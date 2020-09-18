@@ -10,9 +10,14 @@
 # past this point for scp and rcp, and it's important to refrain from
 # outputting anything in those cases.
 if [[ $- != *i* ]] ; then
-	# Shell is non-interactive.  Be done now!
-	return
+    # Shell is non-interactive.  Be done now!
+    return
 fi
+# enable vi mode in bash
+set -o vi
+# fix issue with ctrl-l not clearing screen in bash vi mode
+bind -m vi-insert "\C-l":clear-screen
+
 HISTCONTROL=ignoreboth:erasedups
 PROMPT_DIRTRIM=2
 export EDITOR=/usr/bin/vim
