@@ -4,7 +4,8 @@ let mapleader = ','
 let maplocalleader = '\\'
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
-inoremap jk <esc>
+inoremap <esc> <nop>
+inoremap kj <esc>
 "disable arrow keys - force learn hjkl"
 if v:version >= 703
 nnoremap <Left> <nop>
@@ -84,6 +85,7 @@ Plugin 'honza/vim-snippets'
 Plugin 'tpope/vim-surround'
 Plugin 'pearofducks/ansible-vim'
 Plugin 'junegunn/vader.vim'
+Plugin 'tpope/vim-fugitive'
 
 filetype plugin indent on
 
