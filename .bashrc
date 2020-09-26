@@ -1,3 +1,4 @@
+#!/bin/bash
 # /etc/skel/.bashrc
 #
 # This file is sourced by all *interactive* bash shells on startup,
@@ -26,14 +27,14 @@ export EDITOR=/usr/bin/vim
 # Fix long line wrapping issues: https://askubuntu.com/questions/111840/ps1-problem-messing-up-cli
 #                                https://askubuntu.com/questions/251154/long-lines-overlap-in-bash-ps1-customized-prompt
 
-txtcyn='\[\e[36m\]' #cyan
-txtblu='\[\e[34m\]' #blue
-txtgrn='\[\e[32m\]' #green
-txtwht='\[\e[37m\]' #white
-Iblu='\[\e[94m\]' #High Intensity Blu
-Icyn='\[\e[96m\]' #High Intensity Cyan
-Iwht='\[\e[97m\]' #High Intensity White
-reset='\[\e[m\]'
+txtcyn=$'\e[36m' #cyan
+txtgrn=$'\e[32m' #green
+txtylw=$'\e[33m' #yellow
+txtred=$'\e[31m' #red
+Iblu=$'\e[94m' #High Intensity Blu
+Icyn=$'\e[96m' #High Intensity Cyan
+txtdarkgrey=$'\e[90m'
+reset=$'\e[m'
 
 # . ~/.vim/bundle/powerline/powerline/bindings/bash/powerline.sh
 # export POWERLINE_CONFIG_COMMAND=$HOME/.vim/bundle/powerline/scripts/powerline-config
@@ -41,36 +42,78 @@ reset='\[\e[m\]'
 if [[ -f /usr/bin/virtualenvwrapper.sh ]]; then
     export WORKON_HOME=$HOME/.virtualenvs
     export PROJECT_HOME=$HOME/development/python
+    # shellcheck disable=SC1091
     source /usr/bin/virtualenvwrapper.sh
 fi
 
 alias mandom="man \`find /usr/share/man -type f | shuf | head -1\`"
 alias mount="mount | column -t"
 
-GP_FILE=~/development/bash/git-prompt.sh
-gitprompt='$GP_FILE'
+# GP_FILE=~/development/bash/git-prompt.sh
+# gitprompt='$GP_FILE'
 
-if (( `tput -T $TERM colors` >= 8 )); then
-    if [ -f "$GP_FILE" ]; then
-        export PS1="${Iblu}[${txtcyn}\u${Iblu}@${txtgrn}\h${Icyn} \w${Iblu} ]\$($gitprompt)${Iblu} \\$ ${reset}"
-    else
-        export PS1="${Iblu}[${txtcyn}\u${Iblu}@${txtgrn}\h${Icyn} \w${Iblu} ] \\$ ${reset}"
+
+gitPrompt() {
+
+    gitrepo=$(git rev-parse --is-inside-work-tree 2>/dev/null)
+
+    if [ "$gitrepo" ]; then
+
+        branch="$(git branch -a | awk '/\*/ {print $2 }')"
+        stats_ut="$(git status --porcelain 2>/dev/null | grep -c "^??" )"
+        stats_fc="$(git diff --stat HEAD | tail -n-1 | sed -r 's/[[:alpha:] ()]+//g'| cut -d ',' -f1)"
+        stats_la="$(git diff --stat HEAD | tail -n-1 | sed -r 's/[[:alpha:] ()+]+//g'| cut -d ',' -f2)"
+        stats_lr="$(git diff --stat HEAD | tail -n-1 | sed -r 's/[[:alpha:] ()-]+//g'| cut -d ',' -f3)"
+        domain="$(git config --get user.email)"
+
+        # shellcheck disable=SC2059
+        # If I follow the suggestion of the above SC, it will break PS1 and cause weird wrap arround
+        # issues when going up and down in the bash history
+
+        if (( $(tput -T "$TERM" colors) >= 8 )); then
+            if [ "$(git status | grep -ic 'clean$')" = 1 ]; then
+                printf "\001${reset}\002($branch \001${txtgrn}\002✔\001${reset}\002) \001${txtdarkgrey}\002$domain\001${reset}\002"
+            else
+                if [ "$(git status | grep -ic 'unstage')" = 1 ]; then
+                    printf "\001${reset}\002(${stats_ut}:\001${txtylw}\002$stats_fc\001${reset}\002:\001${txtgrn}\002$stats_la\001${reset}\002:\001${txtred}\002$stats_lr\001${reset}\002 $branch \001${txtylw}\002⬖\001${reset}\002) \001${reset}\002\001${txtdarkgrey}\002$domain\001${reset}\002"
+                else
+                    printf "\001${reset}\002(${stats_ut}:\001${txtylw}\002$stats_fc\001${reset}\002:\001${txtgrn}\002$stats_la\001${reset}\002:\001${txtred}\002$stats_lr\001${reset}\002 $branch \001${txtred}\002✗\001${reset}\002) \001${reset}\002\001${txtdarkgrey}\002$domain\001${reset}\002"
+                fi
+            fi
+        else
+            if [ "$(git status | grep -ic 'clean$')" = 1 ]; then
+                echo -en "$domain ($branch)"
+            else
+                if [ "$(git status | grep -ic 'unstage')" = 1 ]; then
+                    echo -en "($stats_ut:$stats_fc:$stats_la:$stats_lr $branch !)"
+                else
+                    echo -en "($stats_ut:$stats_fc:$stats_la:$stats_lr $branch X)"
+                fi
+            fi
+
+        fi
+
     fi
+}
+
+
+if (( $(tput -T "$TERM" colors) >= 8 )); then
+        export PS1="\[${Iblu}\][\[${txtcyn}\]\u\[${Iblu}\]@\[${txtgrn}\]\h\[${Icyn}\] \w\[${Iblu}\]]\[${reset}\]\$(gitPrompt)\[${Iblu}\] \\$ \[${reset}\]"
 else
-    if [ -f "$GP_FILE" ]; then
-        export PS1="[\u@\h \w ]\$($gitprompt) \\$ "
-    else
-        export PS1="[\u@\h \w ] \\$ "
-    fi
+        export PS1="[\u@\h \w ]\$(gitPrompt) \\$ "
 fi
 
-if [[ `cat /etc/lsb-release | grep -ioP '(?<=distrib_id=")(\w*)'` = 'Gentoo' ]]; then
+if [[ $(grep -ioP '(?<=distrib_id=")(\w*)' /etc/lsb-release) = 'Gentoo' ]]; then
 
     alias nudav="sudo emerge -NuDav @world"
-    export NUMCPUS=$(nproc)
-    export NUMCPUSPLUSONE=$((NUMCPUS + 1 ))
-    export MAKEOPTS="-j${NUMCPUSPLUSONE} -l${NUMCPUS}"
-    export EMERGE_DEFAULT_OPTS="--jobs=${NUMCPUSPLUSONE} --load-average=${NUMCPUS}"
+    NUMCPUS=$(nproc)
+    NUMCPUSPLUSONE=$((NUMCPUS + 1 ))
+    MAKEOPTS="-j${NUMCPUSPLUSONE} -l${NUMCPUS}"
+    EMERGE_DEFAULT_OPTS="--jobs=${NUMCPUSPLUSONE} --load-average=${NUMCPUS}"
+    export NUMCPUS
+    export NUMCPUSPLUSONE
+    export MAKEOPTS
+    export EMERGE_DEFAULT_OPTS
 
 
 fi
@@ -78,7 +121,7 @@ fi
 alias gitbbd='for branch in `git branch -r | grep -iv head`; do echo -e `git show --format="%ci %cr" $branch | head -n 1` \\t$branch; done | sort -r'
 alias ls='ls --color=auto'
 
-KERNEL=`uname -a`
+KERNEL=$(uname -a)
 
 if [[ "$KERNEL" =~ "Microsoft" ]]; then
 
