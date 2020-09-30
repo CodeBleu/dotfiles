@@ -49,10 +49,6 @@ fi
 alias mandom="man \`find /usr/share/man -type f | shuf | head -1\`"
 alias mount="mount | column -t"
 
-# GP_FILE=~/development/bash/git-prompt.sh
-# gitprompt='$GP_FILE'
-
-
 gitPrompt() {
 
     gitrepo=$(git rev-parse --is-inside-work-tree 2>/dev/null)
@@ -62,8 +58,11 @@ gitPrompt() {
         branch="$(git branch -a | awk '/\*/ {print $2 }')"
         stats_ut="$(git status --porcelain 2>/dev/null | grep -c "^??" )"
         stats_fc="$(git diff --stat HEAD | tail -n-1 | sed -r 's/[[:alpha:] ()]+//g'| cut -d ',' -f1)"
-        stats_la="$(git diff --stat HEAD | tail -n-1 | sed -r 's/[[:alpha:] ()+]+//g'| cut -d ',' -f2)"
-        stats_lr="$(git diff --stat HEAD | tail -n-1 | sed -r 's/[[:alpha:] ()-]+//g'| cut -d ',' -f3)"
+        stats_fc="${stats_fc:-0}"
+        stats_la="$(git diff --stat HEAD | tail -n-1 | grep -ioP '(\d) insertion*' | cut -d ' ' -f1)"
+        stats_la="${stats_la:-0}"
+        stats_lr="$(git diff --stat HEAD | tail -n-1 | grep -ioP '(\d) deletion*' | cut -d ' ' -f1)"
+        stats_lr="${stats_lr:-0}"
         domain="$(git config --get user.email)"
 
         # shellcheck disable=SC2059
