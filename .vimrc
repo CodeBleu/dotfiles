@@ -6,9 +6,17 @@ nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 " changed vim window mapping from having to use pinky on left hand :)
 nnoremap <leader>w <C-w>
-nnoremap <leader>ne <C-w>w <cr>0
+
+" mappings to go to first,last,prev and next errors in locatio list
+nnoremap <leader>fe :lfir <cr>
+nnoremap <leader>le :lla <cr>
+nnoremap <leader>ne :lnext <cr>
+nnoremap <leader>pe :lprev <cr>
+
+" diable <esc> key and remap to 'kj'
 inoremap <esc> <nop>
 inoremap kj <esc>
+
 "disable arrow keys - force learn hjkl"
 if v:version >= 703
 nnoremap <Left> <nop>
