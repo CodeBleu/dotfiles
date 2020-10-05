@@ -4,6 +4,9 @@ let mapleader = ','
 let maplocalleader = '\\'
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
+" changed vim window mapping from having to use pinky on left hand :)
+nnoremap <leader>w <C-w>
+nnoremap <leader>ne <C-w>w <cr>0
 inoremap <esc> <nop>
 inoremap kj <esc>
 "disable arrow keys - force learn hjkl"
