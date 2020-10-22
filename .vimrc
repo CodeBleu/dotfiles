@@ -72,7 +72,6 @@ set softtabstop=4
 set nocompatible
 filetype off
 
-set rtp+=$HOME/.vim/bundle/powerline/powerline/bindings/vim/
 set rtp+=~/.vim/bundle/Vundle.vim/
 
 call vundle#rc()
@@ -81,7 +80,6 @@ call vundle#rc()
 " required!
 Plugin 'VundleVim/Vundle.vim'
 " The bundles you install will be listed here
-Plugin 'powerline/powerline'
 Plugin 'klen/python-mode'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'scrooloose/nerdtree'
@@ -97,8 +95,13 @@ Plugin 'tpope/vim-surround'
 Plugin 'pearofducks/ansible-vim'
 Plugin 'junegunn/vader.vim'
 Plugin 'tpope/vim-fugitive'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 
 filetype plugin indent on
+
+let g:airline_powerline_fonts = 1
+let g:airline_theme='dark'
 
 " Needed for javacomplete2
 augroup javacomplete2
