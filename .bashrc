@@ -20,6 +20,7 @@ set -o vi
 bind -m vi-insert "\C-l":clear-screen
 
 HISTCONTROL=ignoreboth:erasedups
+PATH="$HOME/.local/bin:$PATH"
 PROMPT_DIRTRIM=2
 export EDITOR=/usr/bin/vim
 

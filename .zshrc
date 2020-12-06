@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 export TERM="xterm-256color"
 source $HOME/.antigen.zsh
 
@@ -53,7 +55,7 @@ setopt CORRECT
 alias .="source"
 
 if [ `lsb_release -i | grep -ioP '(?<=distributor\sid\:\s)(\w*)'`='Gentoo' ]; then
-    
+
     alias nudav="sudo emerge -NuDav world"
 fi
 

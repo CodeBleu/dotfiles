@@ -1,0 +1,26 @@
+---
+
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.3.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: detect-aws-credentials
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.25.0
+    hooks:
+      - id: yamllint
+        args: ['-d {extends: default, rules: {line-length: disable}}', '-s']
+  - repo: https://github.com/jumanjihouse/pre-commit-hooks
+    rev: 2.1.4
+    hooks:
+      - id: shellcheck
+        # SC1071 - remove warning about zsh not supported
+        args: ['-e', 'SC1071']

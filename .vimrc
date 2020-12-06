@@ -62,9 +62,9 @@ augroup END
 set t_Co=256
 "allow backspace to remove all spaces of 'tab'"
 set softtabstop=4
-" Press Space to turn off highlighting and clear any message already
-" displayed.
-:noremap <F4> :set hlsearch! hlsearch?<CR>
+
+" Remapped highlight search. <F4> is used in vimspector by default
+:noremap <leader>hl :set hlsearch! hlsearch?<CR>
 
 "-----------------------------------------------------------
 " vim as python ide below
@@ -97,6 +97,21 @@ Plugin 'junegunn/vader.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+Plugin 'puremourning/vimspector'
+
+let g:vimspector_enable_mappings = 'HUMAN'
+augroup vimspector
+    nmap <F7> <Plug>VimspectorStepInto
+    nnoremap <leader>dx :VimspectorReset<CR>
+    nnoremap <leader>dc :VimspectorShowOutput Console<CR>
+    nnoremap <leader>de :VimspectorShowOutput stderr<CR>
+    nnoremap <leader>dt :VimspectorShowOutput Telemetry<CR>
+    nnoremap <leader>ds :VimspectorShowOutput server<CR>
+    nnoremap <leader>V :call win_gotoid( g:vimspector_session_windows.variables )<CR>
+    nnoremap <leader>W :call win_gotoid( g:vimspector_session_windows.watches )<CR>
+    nnoremap <leader>S :call win_gotoid( g:vimspector_session_windows.stack_trace )<CR>
+    nnoremap <leader>C :call win_gotoid( g:vimspector_session_windows.code )<CR>
+augroup END
 
 filetype plugin indent on
 

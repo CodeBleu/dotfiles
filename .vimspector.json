@@ -1,0 +1,14 @@
+{
+  "configurations": {
+   "Python: Run current script": {
+      "adapter": "debugpy",
+      "configuration": {
+        "request": "launch",
+        "python": "python",
+        "program": "${file}",
+        "args": [ "*${args:--update-gadget-config}" ],
+        "justMyCode#json": "${justMyCode:true}"
+      }
+    }
+  }
+}
