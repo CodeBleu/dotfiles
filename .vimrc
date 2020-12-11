@@ -6,7 +6,6 @@ nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 " changed vim window mapping from having to use pinky on left hand :)
 nnoremap <leader>w <C-w>
-
 " mappings to go to first,last,prev and next errors in locatio list
 nnoremap <leader>fe :lfir <cr>
 nnoremap <leader>le :lla <cr>
@@ -86,7 +85,11 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'tcomment'
 Plugin 'Solarized'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'scrooloose/syntastic'
+if v:version >= 800
+    Plugin 'dense-analysis/ale'
+else
+    Plugin 'scrooloose/syntastic'
+endif
 Plugin 'artur-shaik/vim-javacomplete2'
 Plugin 'SirVer/ultisnips'
 Plugin 'Raimondi/delimitMate'
@@ -148,15 +151,24 @@ set laststatus=2
 nnoremap  <F2> :NERDTreeToggle<cr>
 "End NerdTREE
 
-"Syntastic Settings
-let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
-let g:syntastic_enable_signs=1
-let g:syntastic_java_checkers=['javac']
-let g:syntastic_javac_config_file_enabled = 1
-let g:syntastic_auto_loc_list=1
-let g:syntastic_auto_jump=0
-let g:syntastic_yaml_checkers=['yamllint']
-let g:syntastic_vim_checkers=['vint']
+if v:version >= 800
+    augroup ale
+        let g:ale_fixers = {
+          \ '*': ['remove_trailing_lines', 'trim_whitespace']
+          \ }
+        let g:ale_fix_on_save = 1
+    augroup END
+else
+    " Syntastic Settings
+    let g:syntastic_mode_map = { 'passive_filetypes': ['python'] }
+    let g:syntastic_enable_signs=1
+    let g:syntastic_java_checkers=['javac']
+    let g:syntastic_javac_config_file_enabled = 1
+    let g:syntastic_auto_loc_list=1
+    let g:syntastic_auto_jump=0
+    let g:syntastic_yaml_checkers=['yamllint']
+    let g:syntastic_vim_checkers=['vint']
+endif
 
 
 " Python-mode
@@ -182,13 +194,16 @@ let g:pymode_rope = 0
 let g:pymode_doc = 1
 let g:pymode_doc_key = 'K'
 
-"Linting
-let g:pymode_lint = 1
-let g:pymode_lint_checker = 'pyflakes,pep8'
-" Auto check on save
-""let g:pymode_lint_write = 1
-let g:pymode_lint_on_fly = 1
-" Support virtualenv
+" If vim version is > 8 we are using ALE linting above
+if v:version <= 800
+    "Linting
+    let g:pymode_lint = 1
+    let g:pymode_lint_checker = 'pylint,pyflakes,pep8'
+    " Auto check on save
+    ""let g:pymode_lint_write = 1
+    let g:pymode_lint_on_fly = 1
+endif
+
 let g:pymode_virtualenv = 1
 
 " Enable breakpoints plugin
