@@ -4,7 +4,7 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.3.0
+    rev: v3.4.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -25,3 +25,7 @@ repos:
       - id: shellcheck
         # SC1071 - remove warning about zsh not supported
         args: ['-e', 'SC1071']
+  - repo: https://github.com/Vimjas/vint
+    rev: v0.4a3
+    hooks:
+      - id: vint
