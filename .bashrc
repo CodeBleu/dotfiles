@@ -43,7 +43,7 @@ reset=$'\e[m'
 if [[ -f /usr/bin/virtualenvwrapper.sh ]]; then
     export WORKON_HOME=$HOME/.virtualenvs
     export PROJECT_HOME=$HOME/development/python
-    # shellcheck disable=SC1091
+    # shellcheck disable=SC1094,SC1091
     source /usr/bin/virtualenvwrapper.sh
 fi
 
@@ -64,7 +64,10 @@ gitPrompt() {
         stats_la="${stats_la:-0}"
         stats_lr="$(git diff --stat HEAD | tail -n-1 | grep -ioP '(\d) deletion*' | cut -d ' ' -f1)"
         stats_lr="${stats_lr:-0}"
-        domain="$(git config --get user.email)"
+
+        if [[ "${GIT_PROMPT_EMAIL}" != "disable" ]]; then
+            domain="$(git config --get user.email)"
+        fi
 
         # shellcheck disable=SC2059
         # If I follow the suggestion of the above SC, it will break PS1 and cause weird wrap arround
