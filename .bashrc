@@ -106,18 +106,9 @@ else
         export PS1="[\u@\h \w ]\$(gitPrompt) \\$ "
 fi
 
-if [[ $(grep -ioP '(?<=distrib_id=")(\w*)' /etc/lsb-release) = 'Gentoo' ]]; then
+if [[ $(grep -ioP '(?<=^id=)(\w*)' /etc/os-release) = 'gentoo' ]]; then
 
     alias nudav="sudo emerge -NuDav @world"
-    NUMCPUS=$(nproc)
-    NUMCPUSPLUSONE=$((NUMCPUS + 1 ))
-    MAKEOPTS="-j${NUMCPUSPLUSONE} -l${NUMCPUS}"
-    EMERGE_DEFAULT_OPTS="--jobs=${NUMCPUSPLUSONE} --load-average=${NUMCPUS}"
-    export NUMCPUS
-    export NUMCPUSPLUSONE
-    export MAKEOPTS
-    export EMERGE_DEFAULT_OPTS
-
 
 fi
 
