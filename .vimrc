@@ -193,7 +193,6 @@ let g:pymode_rope = 0
 " Documentation
 let g:pymode_doc = 1
 let g:pymode_doc_key = 'K'
-
 " If vim version is > 8 we are using ALE linting above
 if v:version <= 800
     "Linting
@@ -202,23 +201,24 @@ if v:version <= 800
     " Auto check on save
     ""let g:pymode_lint_write = 1
     let g:pymode_lint_on_fly = 1
+    " syntax highlighting
+    let g:pymode_syntax = 1
+    let g:pymode_syntax_all = 1
+    let g:pymode_syntax_indent_errors = g:pymode_syntax_all
+    let g:pymode_syntax_space_errors = g:pymode_syntax_all
+    let g:pymode_virtualenv = 1
+
+    " Don't autofold code
+    let g:pymode_folding = 0
+else
+    let g:pymode_lint = 0
+    let g:pymode_virtualenv = 0
 endif
 
-let g:pymode_virtualenv = 1
 
 " Enable breakpoints plugin
 let g:pymode_breakpoint = 1
 let g:pymode_breakpoint_key = 'b'
-
-" syntax highlighting
-let g:pymode_syntax = 1
-let g:pymode_syntax_all = 1
-let g:pymode_syntax_indent_errors = g:pymode_syntax_all
-let g:pymode_syntax_space_errors = g:pymode_syntax_all
-
-" Don't autofold code
-" let g:pymode_folding = 0
-
 " End Python-mode----------------------------------------------------
 
 " hi EOLWhitespace ctermbg=red
