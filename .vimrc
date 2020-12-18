@@ -65,58 +65,64 @@ set softtabstop=4
 " Remapped highlight search. <F4> is used in vimspector by default
 :noremap <leader>hl :set hlsearch! hlsearch?<CR>
 
-"-----------------------------------------------------------
-" vim as python ide below
-"-----------------------------------------------------------
 set nocompatible
-filetype off
 
-set rtp+=~/.vim/bundle/Vundle.vim/
-
-call vundle#rc()
-
-" let Vundle manage Vundle
-" required!
-Plugin 'VundleVim/Vundle.vim'
-" The bundles you install will be listed here
-Plugin 'klen/python-mode'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'tcomment'
-Plugin 'Solarized'
-Plugin 'ctrlpvim/ctrlp.vim'
-if v:version >= 800
-    Plugin 'dense-analysis/ale'
-else
-    Plugin 'scrooloose/syntastic'
+" Install vim-plug if not found
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 endif
-Plugin 'artur-shaik/vim-javacomplete2'
-Plugin 'SirVer/ultisnips'
-Plugin 'Raimondi/delimitMate'
-Plugin 'honza/vim-snippets'
-Plugin 'tpope/vim-surround'
-Plugin 'pearofducks/ansible-vim'
-Plugin 'junegunn/vader.vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'puremourning/vimspector'
 
-let g:vimspector_enable_mappings = 'HUMAN'
-augroup vimspector
-    nmap <F7> <Plug>VimspectorStepInto
-    nnoremap <leader>dx :VimspectorReset<CR>
-    nnoremap <leader>dc :VimspectorShowOutput Console<CR>
-    nnoremap <leader>de :VimspectorShowOutput stderr<CR>
-    nnoremap <leader>dt :VimspectorShowOutput Telemetry<CR>
-    nnoremap <leader>ds :VimspectorShowOutput server<CR>
-    nnoremap <leader>V :call win_gotoid( g:vimspector_session_windows.variables )<CR>
-    nnoremap <leader>W :call win_gotoid( g:vimspector_session_windows.watches )<CR>
-    nnoremap <leader>S :call win_gotoid( g:vimspector_session_windows.stack_trace )<CR>
-    nnoremap <leader>C :call win_gotoid( g:vimspector_session_windows.code )<CR>
+" Run PlugInstall if there are missing plugins
+augroup vimplug
+    autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+      \| PlugInstall --sync | source $MYVIMRC
+    \| endif
 augroup END
 
-filetype plugin indent on
+call plug#begin('~/.vim/plugged')
+" The plugins you install will be listed here
+Plug 'junegunn/vim-plug'
+Plug 'klen/python-mode'
+Plug 'davidhalter/jedi-vim'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'vim-scripts/tComment'
+Plug 'vim-scripts/Solarized'
+Plug 'ctrlpvim/ctrlp.vim'
+if v:version >= 800
+    Plug 'dense-analysis/ale'
+    Plug 'puremourning/vimspector'
+else
+    Plug 'scrooloose/syntastic'
+endif
+Plug 'artur-shaik/vim-javacomplete2'
+Plug 'SirVer/ultisnips'
+Plug 'Raimondi/delimitMate'
+Plug 'honza/vim-snippets'
+Plug 'tpope/vim-surround'
+Plug 'pearofducks/ansible-vim'
+Plug 'junegunn/vader.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+call plug#end()
+
+if v:version >= 800
+    let g:vimspector_enable_mappings = 'HUMAN'
+    augroup vimspector
+        nmap <F7> <Plug>VimspectorStepInto
+        nnoremap <leader>dx :VimspectorReset<CR>
+        nnoremap <leader>dc :VimspectorShowOutput Console<CR>
+        nnoremap <leader>de :VimspectorShowOutput stderr<CR>
+        nnoremap <leader>dt :VimspectorShowOutput Telemetry<CR>
+        nnoremap <leader>ds :VimspectorShowOutput server<CR>
+        nnoremap <leader>V :call win_gotoid( g:vimspector_session_windows.variables )<CR>
+        nnoremap <leader>W :call win_gotoid( g:vimspector_session_windows.watches )<CR>
+        nnoremap <leader>S :call win_gotoid( g:vimspector_session_windows.stack_trace )<CR>
+        nnoremap <leader>C :call win_gotoid( g:vimspector_session_windows.code )<CR>
+    augroup END
+endif
+
 
 let g:airline_powerline_fonts = 1
 let g:airline_theme='dark'
@@ -170,6 +176,9 @@ else
     let g:syntastic_vim_checkers=['vint']
 endif
 
+"-----------------------------------------------------------
+" vim as python ide below
+"-----------------------------------------------------------
 
 " Python-mode
 " Activate rope
