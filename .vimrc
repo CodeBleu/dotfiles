@@ -257,6 +257,12 @@ augroup ansible-lint
     autocmd FileType yaml.ansible setlocal ts=2 sts=2 sw=2 expandtab
 augroup END
 
+augroup dotabs
+    autocmd!
+    autocmd BufNewFile,BufReadPost .gitconfig set filetype=gitconfig foldmethod=manual
+    autocmd FileType gitconfig setlocal ts=4 sts=4 sw=4 noexpandtab
+augroup END
+
 " more subtle popup colors
 if has ('gui_running')
     highlight Pmenu guibg=#cccccc gui=bold

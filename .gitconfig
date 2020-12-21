@@ -1,32 +1,32 @@
 [user]
-    name = "Jason Hollis"
-    email = "jhollis@jdubb.net"
+	name = Jason Hollis
+	email = jhollis@jdubb.net
 [color]
-    ui = true
+	ui = true
 [push]
-    default = simple
+	default = simple
 [core]
-    editor = vim
-    excludesfile = ~/.gitignore
-    whitespace = trailing-space,space-before-tab
+	editor = vim
+	excludesfile = ~/.gitignore
+	whitespace = trailing-space,space-before-tab
 [alias]
-    lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-    lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %an%C(reset)%n''%C(white)%B%C(reset)' --all
-    lg = !"git lg1"
-    fs = diff --stat HEAD
+	lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %an%C(reset)%n''%C(white)%B%C(reset)' --all
+	lg = !"git lg1"
+	fs = diff --stat HEAD
 [diff]
-    tool = vimdiff
+	tool = vimdiff
 [merge]
-    tool = vimdiff
+	tool = vimdiff
 [merge "ours"]
-    driver = true
+	driver = true
 [difftool]
-    prompt = false
+	prompt = false
 [alias]
-    d = difftool
+	d = difftool
 [fetch]
-    prune = true
+	prune = true
 [apply]
-    whitespace = fix
+	whitespace = fix
 [pull]
-    ff = only
+	ff = only
