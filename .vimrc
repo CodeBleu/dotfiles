@@ -96,9 +96,11 @@ else
     Plug 'scrooloose/syntastic'
 endif
 Plug 'artur-shaik/vim-javacomplete2'
-Plug 'SirVer/ultisnips'
+if has('python3') && v:version >= 740
+    Plug 'SirVer/ultisnips'
+    Plug 'honza/vim-snippets'
+endif
 Plug 'Raimondi/delimitMate'
-Plug 'honza/vim-snippets'
 Plug 'tpope/vim-surround'
 Plug 'pearofducks/ansible-vim'
 Plug 'junegunn/vader.vim'
@@ -246,7 +248,7 @@ hi Specialkey ctermbg=red
 hi NonText ctermfg=blue
 " automatically change window's cwd to file's dir
 set autochdir
-" I'm prefer spaces to tabs
+" I prefer spaces to tabs
 set tabstop=4
 set shiftwidth=4
 set expandtab
