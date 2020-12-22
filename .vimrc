@@ -109,6 +109,21 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
+" Our personal snippets go into ~/dotfiles/vim_user_snippets.
+" By defining the below, it opens new file at this location.
+let g:UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit='~/dotfiles/vim_user_snippets'
+
+" Open UltiSnipEdit in split window
+let g:UltiSnipsEditSplit='vertical'
+
+" Add your private snippet path to runtimepath
+set runtimepath^=~/dotfiles
+
+" When vim starts, Ultisnips tries to find snippet directories defined below, under the paths in runtimepath.
+let g:UltiSnipsSnippetDirectories=[ 'UltiSnips', 'vim_user_snippets']
+
+nnoremap <leader>es :UltiSnipsEdit<CR>
+
 if v:version >= 800
     let g:vimspector_enable_mappings = 'HUMAN'
     augroup vimspector
