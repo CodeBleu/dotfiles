@@ -171,7 +171,11 @@ set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
 set laststatus=2
 
 "NeardTREE
-nnoremap  <F2> :NERDTreeToggle<cr>
+augroup nerdtree
+    nnoremap  <F2> :NERDTreeToggle<cr>
+    autocmd FileType nerdtree setlocal relativenumber
+    let NERDTreeShowLineNumbers=1
+augroup END
 "End NerdTREE
 
 if v:version >= 800
