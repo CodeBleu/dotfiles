@@ -71,10 +71,18 @@ set softtabstop=4
 :noremap <localleader>hl :set hlsearch! hlsearch?<cr>
 
 set nocompatible
-filetype plugin on
-syntax on
+
+" The ':syntax enable' command will keep your current color settings.  This
+" allows using ':highlight' commands to set your preferred colors before or
+" after using this command.  If you want Vim to overrule your settings with the
+" defaults, use: >
+"     :syntax on
 
 " Install vim-plug if not found
+if !exists('g:syntax_on')
+    syntax enable
+endif
+
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -90,7 +98,7 @@ augroup END
 call plug#begin('~/.vim/plugged')
 " The plugins you install will be listed here
 Plug 'junegunn/vim-plug'
-Plug 'klen/python-mode', { 'for': 'python' }
+Plug 'klen/python-mode'
 Plug 'davidhalter/jedi-vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'vim-scripts/tComment'
@@ -111,7 +119,7 @@ endif
 Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-surround'
 Plug 'pearofducks/ansible-vim'
-Plug 'junegunn/vader.vim'
+Plug 'junegunn/vader.vim', { 'for': 'vim' }
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
