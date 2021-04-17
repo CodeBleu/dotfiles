@@ -11,6 +11,11 @@ nnoremap <localleader>fe :lfir <cr>
 nnoremap <localleader>le :lla <cr>
 nnoremap <localleader>ne :lnext <cr>
 nnoremap <localleader>pe :lprev <cr>
+" open new horizontal/vertical windows
+nnoremap <localleader>w- :split new<cr>
+nnoremap <localleader>w\ :vsplit new<cr>
+" Needed for autoload of CtrlP Plugin
+nnoremap <C-p> :CtrlP<cr>
 
 " diable <esc> key and remap to 'kj'
 inoremap <esc> <nop>
@@ -63,7 +68,7 @@ set t_Co=256
 set softtabstop=4
 
 " Remapped highlight search. <F4> is used in vimspector by default
-:noremap <localleader>hl :set hlsearch! hlsearch?<CR>
+:noremap <localleader>hl :set hlsearch! hlsearch?<cr>
 
 set nocompatible
 filetype plugin on
@@ -85,20 +90,20 @@ augroup END
 call plug#begin('~/.vim/plugged')
 " The plugins you install will be listed here
 Plug 'junegunn/vim-plug'
-Plug 'klen/python-mode'
+Plug 'klen/python-mode', { 'for': 'python' }
 Plug 'davidhalter/jedi-vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'vim-scripts/tComment'
 Plug 'vim-scripts/Solarized'
-Plug 'ctrlpvim/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim', { 'on': 'CtrlP'}
 Plug 'vimwiki/vimwiki'
 if v:version >= 800
     Plug 'dense-analysis/ale'
-    Plug 'puremourning/vimspector'
+    Plug 'puremourning/vimspector', { 'for': 'python,sh'}
 else
     Plug 'scrooloose/syntastic'
 endif
-Plug 'artur-shaik/vim-javacomplete2'
+Plug 'artur-shaik/vim-javacomplete2', { 'for': 'java'}
 if has('python3') && v:version >= 740
     Plug 'SirVer/ultisnips'
     Plug 'honza/vim-snippets'
@@ -125,21 +130,21 @@ set runtimepath^=~/dotfiles
 " When vim starts, Ultisnips tries to find snippet directories defined below, under the paths in runtimepath.
 let g:UltiSnipsSnippetDirectories=[ 'UltiSnips', 'vim_user_snippets']
 
-nnoremap <localleader>es :UltiSnipsEdit<CR>
+nnoremap <localleader>es :UltiSnipsEdit<cr>
 
 if v:version >= 800
     let g:vimspector_enable_mappings = 'HUMAN'
     augroup vimspector
         nmap <F7> <Plug>VimspectorStepInto
-        nnoremap <localleader>dx :VimspectorReset<CR>
-        nnoremap <localleader>dc :VimspectorShowOutput Console<CR>
-        nnoremap <localleader>de :VimspectorShowOutput stderr<CR>
-        nnoremap <localleader>dt :VimspectorShowOutput Telemetry<CR>
-        nnoremap <localleader>ds :VimspectorShowOutput server<CR>
-        nnoremap <localleader>V :call win_gotoid( g:vimspector_session_windows.variables )<CR>
-        nnoremap <localleader>W :call win_gotoid( g:vimspector_session_windows.watches )<CR>
-        nnoremap <localleader>S :call win_gotoid( g:vimspector_session_windows.stack_trace )<CR>
-        nnoremap <localleader>C :call win_gotoid( g:vimspector_session_windows.code )<CR>
+        nnoremap <localleader>dx :VimspectorReset<cr>
+        nnoremap <localleader>dc :VimspectorShowOutput Console<cr>
+        nnoremap <localleader>de :VimspectorShowOutput stderr<cr>
+        nnoremap <localleader>dt :VimspectorShowOutput Telemetry<cr>
+        nnoremap <localleader>ds :VimspectorShowOutput server<cr>
+        nnoremap <localleader>V :call win_gotoid( g:vimspector_session_windows.variables )<cr>
+        nnoremap <localleader>W :call win_gotoid( g:vimspector_session_windows.watches )<cr>
+        nnoremap <localleader>S :call win_gotoid( g:vimspector_session_windows.stack_trace )<cr>
+        nnoremap <localleader>C :call win_gotoid( g:vimspector_session_windows.code )<cr>
     augroup END
 endif
 
@@ -267,7 +272,7 @@ let g:pymode_breakpoint_key = 'b'
 " Use ,l to toggle display of whitespace
 " Don't map L as it is a standard motion key (LOW)
 set list!
-nnoremap <localleader>l :set list!<CR>
+nnoremap <localleader>l :set list!<cr>
 " And set some nice chars to do it with
 " set listchars=tab:»\ ,eol:¬,trail:-
 set listchars=tab:»-,trail:\ ,eol:¬
