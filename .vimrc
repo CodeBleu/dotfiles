@@ -1,16 +1,16 @@
 set encoding=utf-8
 scriptencoding utf-8
-let mapleader = ','
-let maplocalleader = '\\'
-nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-nnoremap <leader>sv :source $MYVIMRC<cr>
+let mapleader = ' '
+let maplocalleader = ','
+nnoremap <localleader>ev :vsplit $MYVIMRC<cr>
+nnoremap <localleader>sv :source $MYVIMRC<cr>
 " changed vim window mapping from having to use pinky on left hand :)
-nnoremap <leader>w <C-w>
+nnoremap <localleader>w <C-w>
 " mappings to go to first,last,prev and next errors in locatio list
-nnoremap <leader>fe :lfir <cr>
-nnoremap <leader>le :lla <cr>
-nnoremap <leader>ne :lnext <cr>
-nnoremap <leader>pe :lprev <cr>
+nnoremap <localleader>fe :lfir <cr>
+nnoremap <localleader>le :lla <cr>
+nnoremap <localleader>ne :lnext <cr>
+nnoremap <localleader>pe :lprev <cr>
 
 " diable <esc> key and remap to 'kj'
 inoremap <esc> <nop>
@@ -63,7 +63,7 @@ set t_Co=256
 set softtabstop=4
 
 " Remapped highlight search. <F4> is used in vimspector by default
-:noremap <leader>hl :set hlsearch! hlsearch?<CR>
+:noremap <localleader>hl :set hlsearch! hlsearch?<CR>
 
 set nocompatible
 
@@ -122,21 +122,21 @@ set runtimepath^=~/dotfiles
 " When vim starts, Ultisnips tries to find snippet directories defined below, under the paths in runtimepath.
 let g:UltiSnipsSnippetDirectories=[ 'UltiSnips', 'vim_user_snippets']
 
-nnoremap <leader>es :UltiSnipsEdit<CR>
+nnoremap <localleader>es :UltiSnipsEdit<CR>
 
 if v:version >= 800
     let g:vimspector_enable_mappings = 'HUMAN'
     augroup vimspector
         nmap <F7> <Plug>VimspectorStepInto
-        nnoremap <leader>dx :VimspectorReset<CR>
-        nnoremap <leader>dc :VimspectorShowOutput Console<CR>
-        nnoremap <leader>de :VimspectorShowOutput stderr<CR>
-        nnoremap <leader>dt :VimspectorShowOutput Telemetry<CR>
-        nnoremap <leader>ds :VimspectorShowOutput server<CR>
-        nnoremap <leader>V :call win_gotoid( g:vimspector_session_windows.variables )<CR>
-        nnoremap <leader>W :call win_gotoid( g:vimspector_session_windows.watches )<CR>
-        nnoremap <leader>S :call win_gotoid( g:vimspector_session_windows.stack_trace )<CR>
-        nnoremap <leader>C :call win_gotoid( g:vimspector_session_windows.code )<CR>
+        nnoremap <localleader>dx :VimspectorReset<CR>
+        nnoremap <localleader>dc :VimspectorShowOutput Console<CR>
+        nnoremap <localleader>de :VimspectorShowOutput stderr<CR>
+        nnoremap <localleader>dt :VimspectorShowOutput Telemetry<CR>
+        nnoremap <localleader>ds :VimspectorShowOutput server<CR>
+        nnoremap <localleader>V :call win_gotoid( g:vimspector_session_windows.variables )<CR>
+        nnoremap <localleader>W :call win_gotoid( g:vimspector_session_windows.watches )<CR>
+        nnoremap <localleader>S :call win_gotoid( g:vimspector_session_windows.stack_trace )<CR>
+        nnoremap <localleader>C :call win_gotoid( g:vimspector_session_windows.code )<CR>
     augroup END
 endif
 
@@ -257,7 +257,7 @@ let g:pymode_breakpoint_key = 'b'
 " Use ,l to toggle display of whitespace
 " Don't map L as it is a standard motion key (LOW)
 set list!
-nnoremap <leader>l :set list!<CR>
+nnoremap <localleader>l :set list!<CR>
 " And set some nice chars to do it with
 " set listchars=tab:»\ ,eol:¬,trail:-
 set listchars=tab:»-,trail:\ ,eol:¬
