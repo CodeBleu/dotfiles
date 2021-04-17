@@ -66,6 +66,8 @@ set softtabstop=4
 :noremap <localleader>hl :set hlsearch! hlsearch?<CR>
 
 set nocompatible
+filetype plugin on
+syntax on
 
 " Install vim-plug if not found
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -89,6 +91,7 @@ Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'vim-scripts/tComment'
 Plug 'vim-scripts/Solarized'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'vimwiki/vimwiki'
 if v:version >= 800
     Plug 'dense-analysis/ale'
     Plug 'puremourning/vimspector'
@@ -177,6 +180,13 @@ augroup nerdtree
     let NERDTreeShowLineNumbers=1
 augroup END
 "End NerdTREE
+
+"vimwiki
+augroup vimwiki
+    map  <localleader><space> <Plug>VimwikiToggleListItem
+    let g:vimwiki_listsyms = ' ○◐●✓'
+augroup END
+"End vimwiki
 
 if v:version >= 800
     augroup ale
