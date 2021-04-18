@@ -131,7 +131,8 @@ let g:UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit='~/dotfiles/vim_user_snip
 
 " Open UltiSnipEdit in split window
 let g:UltiSnipsEditSplit='vertical'
-
+" Change <tab> for Ultisnips so it will work in vimwiki tables
+let g:UltiSnipsExpandTrigger='<c-p>'
 " Add your private snippet path to runtimepath
 set runtimepath^=~/dotfiles
 
