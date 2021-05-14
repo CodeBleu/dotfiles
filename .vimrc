@@ -17,7 +17,7 @@ nnoremap <localleader>w\ :vsplit new<cr>
 " Needed for autoload of CtrlP Plugin
 nnoremap <C-p> :CtrlP<cr>
 
-" diable <esc> key and remap to 'kj'
+" disable <esc> key and remap to 'kj'
 inoremap <esc> <nop>
 inoremap kj <esc>
 
@@ -199,6 +199,11 @@ augroup END
 augroup vimwiki
     map  <localleader><space> <Plug>VimwikiToggleListItem
     let g:vimwiki_listsyms = ' ○◐●✓'
+    " FOR Markdown formatting
+    let g:vimwiki_list = [{'path': '~/vimwiki'}]
+    let g:vimwiki_global_ext = 0
+    " let g:vimwiki_list = [{'path': '~/vimwiki',
+    "                       \ 'syntax': 'markdown', 'ext': '.md'}]
 augroup END
 "End vimwiki
 
