@@ -1,0 +1,26 @@
+snippet name
+- name: $1
+endsnippet
+
+snippet file
+- name: $1
+  file:
+    path: "$2"
+    state: $3
+endsnippet
+
+snippet package
+- name: $1
+  package:
+    name:
+      - $2
+    state: $3
+endsnippet
+
+snippet cmd
+- name: $1
+  command:
+    cmd: $2
+  changed_when: false
+  register: $3
+endsnippet

@@ -1,0 +1,14 @@
+# Snippet to create python decorators
+snippet dec
+def $1(func):
+    def wrapper(*args, **kwargs):
+        # do before
+        print("before")
+        $2
+        result = func(*args, **kwargs)
+        print("after")
+        $3
+        return result
+        # do after
+    return wrapper
+endsnippet
