@@ -32,3 +32,5 @@
 	whitespace = fix
 [pull]
 	ff = only
+[credential]
+	helper = cache
