@@ -41,6 +41,18 @@ nnoremap <Down> <nop>
 
     nnoremap <F3> :call NumberToggle()<cr>
 
+    set colorcolumn=0
+
+    function! ColorColumn()
+        if(&colorcolumn == 0)
+            set colorcolumn=80
+        else
+            set colorcolumn=0
+        endif
+    endfunc
+
+noremap <localleader>cc :call ColorColumn()<cr>
+
     "Auto change from hybrid mode to number while turning on cursor and
     "setting color to lightblue
     augroup numbertoggle
@@ -68,7 +80,7 @@ set t_Co=256
 set softtabstop=4
 
 " Remapped highlight search. <F4> is used in vimspector by default
-:noremap <localleader>hl :set hlsearch! hlsearch?<cr>
+noremap <localleader>hl :set hlsearch! hlsearch?<cr>
 
 set nocompatible
 
@@ -123,6 +135,8 @@ Plug 'junegunn/vader.vim', { 'for': 'vim' }
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'airblade/vim-gitgutter'
+Plug 'dbeniamine/cheat.sh-vim'
 call plug#end()
 
 " Our personal snippets go into ~/dotfiles/vim_user_snippets.
@@ -163,6 +177,7 @@ endif
 
 let g:airline_powerline_fonts = 1
 let g:airline_theme='dark'
+let g:airline#extensions#hunks#non_zero_only = 1
 
 " Needed for javacomplete2
 augroup javacomplete2
