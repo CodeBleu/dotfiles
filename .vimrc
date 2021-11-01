@@ -14,6 +14,47 @@ nnoremap <localleader>pe :lprev <cr>
 " open new horizontal/vertical windows
 nnoremap <localleader>w- :split new<cr>
 nnoremap <localleader>w\ :vsplit new<cr>
+
+" Toggle set paste/set nopaste
+set pastetoggle=<F5>
+
+function! WrapForTmux(s)
+  if !exists('$TMUX')
+    return a:s
+  endif
+
+  let tmux_start = "\<Esc>Ptmux;"
+  let tmux_end = "\<Esc>\\"
+
+  return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
+endfunction
+
+let &t_SI .= WrapForTmux("\<Esc>[?2004h")
+let &t_EI .= WrapForTmux("\<Esc>[?2004l")
+
+function! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ''
+endfunction
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+" end Toggle set paste/set nopaste
+
+" allow moving between buffers without saving first
+set hidden
+
+" buffer navigation
+
+" Next buffer
+nnoremap bn :bn<cr>
+" Previous buffer
+nnoremap bp :bp<cr>
+" Buffer list
+nnoremap bls :ls<cr>
+" Save all buffers
+nnoremap bua :b update<cr>
+
 " Needed for autoload of CtrlP Plugin
 nnoremap <C-p> :CtrlP<cr>
 
@@ -27,6 +68,17 @@ nnoremap <Left> <nop>
 nnoremap <Right> <nop>
 nnoremap <Up> <nop>
 nnoremap <Down> <nop>
+
+
+function! Scratch()
+    split
+    resize 5
+    noswapfile hide enew
+    setlocal buftype=nofile
+    setlocal bufhidden=hide
+    setlocal nobuflisted
+endfunction
+
     "Function to toggle from number to relative number"
     "set Hybrid mode as default
     set number relativenumber
@@ -334,7 +386,7 @@ augroup END
 " more subtle popup colors
 if has ('gui_running')
     highlight Pmenu guibg=#cccccc gui=bold
-    endif
+endif
 
 " Change default behavior of 'gf' Goto File to split mode instead of current
 " window
