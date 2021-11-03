@@ -1,7 +1,73 @@
+" ------------------------------ Settings ------------------------------
+
 set encoding=utf-8
+set splitright
+set hidden
+set colorcolumn=0
+" allow colors to work for powerline"
+set t_Co=256
+"allow backspace to remove all spaces of 'tab'"
+set softtabstop=4
+set nocompatible
+" Add your private snippet path to runtimepath
+set runtimepath^=~/dotfiles
+" Powerline setup
+set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
+set laststatus=2
+set list!
+" automatically change window's cwd to file's dir
+set autochdir
+" I prefer spaces to tabs
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
 scriptencoding utf-8
 let mapleader = ' '
 let maplocalleader = ','
+
+" Needed for javacomplete2
+augroup javacomplete2
+    autocmd!
+    autocmd FileType java setlocal omnifunc=javacomplete#Complete
+augroup END
+
+augroup vimrc_autocmds
+    autocmd!
+    " highlight characters past column 120
+    autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
+    autocmd FileType python match Excess /\%120v.*/
+    autocmd FileType python set nowrap
+augroup END
+
+" Settings for yaml files .ansible is added for ansible-lint
+augroup ansible-lint
+    autocmd!
+    autocmd BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml.ansible foldmethod=manual
+    autocmd FileType yaml.ansible setlocal ts=2 sts=2 sw=2 expandtab
+augroup END
+
+augroup dotabs
+    autocmd!
+    autocmd BufNewFile,BufReadPost .gitconfig set filetype=gitconfig foldmethod=manual
+    autocmd FileType gitconfig setlocal ts=4 sts=4 sw=4 noexpandtab
+augroup END
+
+" Read-only odt/odp through odt2txt
+augroup odt2txt
+    autocmd!
+    autocmd BufReadPre *.odt,*.odp silent set ro
+    autocmd BufReadPost *.odt,*.odp silent %!odt2txt "%"
+augroup END
+
+" more subtle popup colors
+if has ('gui_running')
+    highlight Pmenu guibg=#cccccc gui=bold
+endif
+
+
+" ------------------------------ Mappings ------------------------------
+
 nnoremap <localleader>ev :vsplit $MYVIMRC<cr>
 nnoremap <localleader>sv :source $MYVIMRC<cr>
 " changed vim window mapping from having to use pinky on left hand :)
@@ -14,6 +80,39 @@ nnoremap <localleader>pe :lprev <cr>
 " open new horizontal/vertical windows
 nnoremap <localleader>w- :split new<cr>
 nnoremap <localleader>w\ :vsplit new<cr>
+nnoremap <localleader>cc :call ColorColumn()<cr>
+" Remapped highlight search. <F4> is used in vimspector by default
+noremap <localleader>hl :set hlsearch! hlsearch?<cr>
+nnoremap <localleader>es :UltiSnipsEdit<cr>
+" buffer navigation
+" Next buffer
+nnoremap bn :bn<cr>
+" Previous buffer
+nnoremap bp :bp<cr>
+" Buffer list
+nnoremap bls :ls<cr>
+" Save all buffers
+nnoremap bua :b update<cr>
+" Needed for autoload of CtrlP Plugin
+nnoremap <C-p> :CtrlP<cr>
+" disable <esc> key and remap to 'kj'
+inoremap <esc> <nop>
+inoremap kj <esc>
+"disable arrow keys - force learn hjkl"
+nnoremap <Left> <nop>
+nnoremap <Right> <nop>
+nnoremap <Up> <nop>
+nnoremap <Down> <nop>
+" Use ,l to toggle display of whitespace
+" Don't map L as it is a standard motion key (LOW)
+nnoremap <localleader>l :set list!<cr>
+" Change default behavior of 'gf' Goto File to split mode instead of current
+" window
+nnoremap gf <C-W>f
+vnoremap gf <C-W>f
+
+
+" ------------------------------ Functions/misc ------------------------------
 
 " Toggle set paste/set nopaste
 set pastetoggle=<F5>
@@ -41,35 +140,6 @@ endfunction
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 " end Toggle set paste/set nopaste
 
-" allow moving between buffers without saving first
-set hidden
-
-" buffer navigation
-
-" Next buffer
-nnoremap bn :bn<cr>
-" Previous buffer
-nnoremap bp :bp<cr>
-" Buffer list
-nnoremap bls :ls<cr>
-" Save all buffers
-nnoremap bua :b update<cr>
-
-" Needed for autoload of CtrlP Plugin
-nnoremap <C-p> :CtrlP<cr>
-
-" disable <esc> key and remap to 'kj'
-inoremap <esc> <nop>
-inoremap kj <esc>
-
-"disable arrow keys - force learn hjkl"
-if v:version >= 703
-nnoremap <Left> <nop>
-nnoremap <Right> <nop>
-nnoremap <Up> <nop>
-nnoremap <Down> <nop>
-
-
 function! Scratch()
     split
     resize 5
@@ -78,6 +148,19 @@ function! Scratch()
     setlocal bufhidden=hide
     setlocal nobuflisted
 endfunction
+
+function! ColorColumn()
+    if(&colorcolumn == 0)
+        set colorcolumn=80
+    else
+        set colorcolumn=0
+    endif
+endfunc
+
+
+" ------------------------------ Version Specific ------------------------------
+
+if v:version >= 703
 
     "Function to toggle from number to relative number"
     "set Hybrid mode as default
@@ -93,18 +176,6 @@ endfunction
 
     nnoremap <F3> :call NumberToggle()<cr>
 
-    set colorcolumn=0
-
-    function! ColorColumn()
-        if(&colorcolumn == 0)
-            set colorcolumn=80
-        else
-            set colorcolumn=0
-        endif
-    endfunc
-
-noremap <localleader>cc :call ColorColumn()<cr>
-
     "Auto change from hybrid mode to number while turning on cursor and
     "setting color to lightblue
     augroup numbertoggle
@@ -119,22 +190,24 @@ else
     set number
 endif
 
-" Read-only odt/odp through odt2txt
-augroup odt2txt
-    autocmd!
-    autocmd BufReadPre *.odt,*.odp silent set ro
-    autocmd BufReadPost *.odt,*.odp silent %!odt2txt "%"
-augroup END
+if v:version >= 800
+    let g:vimspector_enable_mappings = 'HUMAN'
+    augroup vimspector
+        nmap <F7> <Plug>VimspectorStepInto
+        nnoremap <localleader>dx :VimspectorReset<cr>
+        nnoremap <localleader>dc :VimspectorShowOutput Console<cr>
+        nnoremap <localleader>de :VimspectorShowOutput stderr<cr>
+        nnoremap <localleader>dt :VimspectorShowOutput Telemetry<cr>
+        nnoremap <localleader>ds :VimspectorShowOutput server<cr>
+        nnoremap <localleader>V :call win_gotoid( g:vimspector_session_windows.variables )<cr>
+        nnoremap <localleader>W :call win_gotoid( g:vimspector_session_windows.watches )<cr>
+        nnoremap <localleader>S :call win_gotoid( g:vimspector_session_windows.stack_trace )<cr>
+        nnoremap <localleader>C :call win_gotoid( g:vimspector_session_windows.code )<cr>
+    augroup END
+endif
 
-" allow colors to work for powerline"
-set t_Co=256
-"allow backspace to remove all spaces of 'tab'"
-set softtabstop=4
 
-" Remapped highlight search. <F4> is used in vimspector by default
-noremap <localleader>hl :set hlsearch! hlsearch?<cr>
-
-set nocompatible
+" ------------------------------ Plugins ------------------------------
 
 " The ':syntax enable' command will keep your current color settings.  This
 " allows using ':highlight' commands to set your preferred colors before or
@@ -191,10 +264,28 @@ Plug 'airblade/vim-gitgutter'
 Plug 'dbeniamine/cheat.sh-vim'
 call plug#end()
 
+
+" ------------------------------ Plugins: Settings ------------------------------
+
+" Color settings applied after Solarized Plugin loaded
+
+" change theme to easier reading "
+set background=dark
+colorscheme solarized
+" And set some nice chars to do it with
+" set listchars=tab:»\ ,eol:¬,trail:-
+set listchars=tab:»-,trail:\ ,eol:¬
+" Specialkey is used for highlighing 'trail' above
+" see :help listchars
+hi Specialkey ctermbg=red
+hi NonText ctermfg=blue
+
+"set the Background color for highlighted searches"
+:hi Search cterm=bold ctermfg=grey ctermbg=darkblue
+
 " Our personal snippets go into ~/dotfiles/vim_user_snippets.
 " By defining the below, it opens new file at this location.
 let g:UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit='~/dotfiles/vim_user_snippets'
-
 " Open UltiSnipEdit in split window
 let g:UltiSnipsEditSplit='vertical'
 " Change <tab> for Ultisnips so it will work in vimwiki tables
@@ -202,60 +293,12 @@ let g:UltiSnipsExpandTrigger='<c-p>'
 let g:UltiSnipsListSnippets='<c-j>'
 let g:UltiSnipsJumpForwardTrigger='<c-l>'
 let g:UltiSnipsJumpBackwardTrigger='<c-h>'
-" Add your private snippet path to runtimepath
-set runtimepath^=~/dotfiles
-
 " When vim starts, Ultisnips tries to find snippet directories defined below, under the paths in runtimepath.
 let g:UltiSnipsSnippetDirectories=[ 'UltiSnips', 'vim_user_snippets']
-
-nnoremap <localleader>es :UltiSnipsEdit<cr>
-
-if v:version >= 800
-    let g:vimspector_enable_mappings = 'HUMAN'
-    augroup vimspector
-        nmap <F7> <Plug>VimspectorStepInto
-        nnoremap <localleader>dx :VimspectorReset<cr>
-        nnoremap <localleader>dc :VimspectorShowOutput Console<cr>
-        nnoremap <localleader>de :VimspectorShowOutput stderr<cr>
-        nnoremap <localleader>dt :VimspectorShowOutput Telemetry<cr>
-        nnoremap <localleader>ds :VimspectorShowOutput server<cr>
-        nnoremap <localleader>V :call win_gotoid( g:vimspector_session_windows.variables )<cr>
-        nnoremap <localleader>W :call win_gotoid( g:vimspector_session_windows.watches )<cr>
-        nnoremap <localleader>S :call win_gotoid( g:vimspector_session_windows.stack_trace )<cr>
-        nnoremap <localleader>C :call win_gotoid( g:vimspector_session_windows.code )<cr>
-    augroup END
-endif
-
 
 let g:airline_powerline_fonts = 1
 let g:airline_theme='dark'
 let g:airline#extensions#hunks#non_zero_only = 1
-
-" Needed for javacomplete2
-augroup javacomplete2
-    autocmd!
-    autocmd FileType java setlocal omnifunc=javacomplete#Complete
-augroup END
-
-" change theme to easier reading "
-set background=dark
-colorscheme solarized
-
-"set the Background color for highlighted searches"
-:hi Search cterm=bold ctermfg=grey ctermbg=darkblue
-
-" The rest of your config follows here
-augroup vimrc_autocmds
-    autocmd!
-    " highlight characters past column 120
-    autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
-    autocmd FileType python match Excess /\%120v.*/
-    autocmd FileType python set nowrap
-augroup END
-
-" Powerline setup
-set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
-set laststatus=2
 
 "NeardTREE
 augroup nerdtree
@@ -344,51 +387,7 @@ else
     let g:pymode_virtualenv = 0
 endif
 
-
 " Enable breakpoints plugin
 let g:pymode_breakpoint = 1
 let g:pymode_breakpoint_key = 'b'
 " End Python-mode----------------------------------------------------
-
-" hi EOLWhitespace ctermbg=red
-" match EOLWhitespace /\s\+$/
-
-" Use ,l to toggle display of whitespace
-" Don't map L as it is a standard motion key (LOW)
-set list!
-nnoremap <localleader>l :set list!<cr>
-" And set some nice chars to do it with
-" set listchars=tab:»\ ,eol:¬,trail:-
-set listchars=tab:»-,trail:\ ,eol:¬
-" Specialkey is used for highlighing 'trail' above
-" see :help listchars
-hi Specialkey ctermbg=red
-hi NonText ctermfg=blue
-" automatically change window's cwd to file's dir
-set autochdir
-" I prefer spaces to tabs
-set tabstop=4
-set shiftwidth=4
-set expandtab
-" Settings for yaml files .ansible is added for ansible-lint
-augroup ansible-lint
-    autocmd!
-    autocmd BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml.ansible foldmethod=manual
-    autocmd FileType yaml.ansible setlocal ts=2 sts=2 sw=2 expandtab
-augroup END
-
-augroup dotabs
-    autocmd!
-    autocmd BufNewFile,BufReadPost .gitconfig set filetype=gitconfig foldmethod=manual
-    autocmd FileType gitconfig setlocal ts=4 sts=4 sw=4 noexpandtab
-augroup END
-
-" more subtle popup colors
-if has ('gui_running')
-    highlight Pmenu guibg=#cccccc gui=bold
-endif
-
-" Change default behavior of 'gf' Goto File to split mode instead of current
-" window
- nnoremap gf <C-W>f
- vnoremap gf <C-W>f
