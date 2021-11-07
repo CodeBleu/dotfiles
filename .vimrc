@@ -21,8 +21,12 @@ set autochdir
 set tabstop=4
 set shiftwidth=4
 set expandtab
+set wildmenu
+set wildmode=longest,full
 set foldmethod=marker
 set nofoldenable
+set nowrap
+set incsearch
 
 scriptencoding utf-8
 let mapleader = ' '
@@ -113,6 +117,8 @@ nnoremap <localleader>l :set list!<cr>
 " window
 nnoremap gf <C-W>f
 vnoremap gf <C-W>f
+nmap <localleader>x :!xdg-open %<cr><cr>
+nnoremap <localleader>gf :GitGutterFold<cr>
 
 "}}}
 
@@ -266,11 +272,17 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
 Plug 'dbeniamine/cheat.sh-vim'
+Plug 'vim-test/vim-test'
 call plug#end()
 "}}}
 
 " ------------------------------ Plugins: Settings ------------------------------{{{
 
+nnoremap <localleader>tn :TestNearest<CR>
+nnoremap <localleader>tf :TestFile<CR>
+nnoremap <localleader>ts :TestSuite<CR>
+nnoremap <localleader>tl :TestLast<CR>
+nnoremap <localleader>tv :TestVisit<CR>
 
 " Color settings applied after Solarized Plugin loaded
 
@@ -287,6 +299,7 @@ hi NonText ctermfg=blue
 
 "set the Background color for highlighted searches"
 :hi Search cterm=bold ctermfg=grey ctermbg=darkblue
+:hi Wildmenu cterm=bold ctermfg=grey ctermbg=darkblue
 
 " Our personal snippets go into ~/dotfiles/vim_user_snippets.
 " By defining the below, it opens new file at this location.
