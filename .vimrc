@@ -1,4 +1,4 @@
-" ------------------------------ Settings ------------------------------
+" ------------------------------ Settings ------------------------------{{{
 
 set encoding=utf-8
 set splitright
@@ -21,6 +21,8 @@ set autochdir
 set tabstop=4
 set shiftwidth=4
 set expandtab
+set foldmethod=marker
+set nofoldenable
 
 scriptencoding utf-8
 let mapleader = ' '
@@ -65,8 +67,9 @@ if has ('gui_running')
     highlight Pmenu guibg=#cccccc gui=bold
 endif
 
+" }}}
 
-" ------------------------------ Mappings ------------------------------
+" ------------------------------ Mappings ------------------------------{{{
 
 nnoremap <localleader>ev :vsplit $MYVIMRC<cr>
 nnoremap <localleader>sv :source $MYVIMRC<cr>
@@ -111,8 +114,9 @@ nnoremap <localleader>l :set list!<cr>
 nnoremap gf <C-W>f
 vnoremap gf <C-W>f
 
+"}}}
 
-" ------------------------------ Functions/misc ------------------------------
+" ------------------------------ Functions/misc ------------------------------{{{
 
 " Toggle set paste/set nopaste
 set pastetoggle=<F5>
@@ -156,9 +160,9 @@ function! ColorColumn()
         set colorcolumn=0
     endif
 endfunc
+"}}}
 
-
-" ------------------------------ Version Specific ------------------------------
+" ------------------------------ Version Specific ------------------------------{{{
 
 if v:version >= 703
 
@@ -205,9 +209,9 @@ if v:version >= 800
         nnoremap <localleader>C :call win_gotoid( g:vimspector_session_windows.code )<cr>
     augroup END
 endif
+"}}}
 
-
-" ------------------------------ Plugins ------------------------------
+" ------------------------------ Plugins ------------------------------{{{
 
 " The ':syntax enable' command will keep your current color settings.  This
 " allows using ':highlight' commands to set your preferred colors before or
@@ -263,9 +267,10 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
 Plug 'dbeniamine/cheat.sh-vim'
 call plug#end()
+"}}}
 
+" ------------------------------ Plugins: Settings ------------------------------{{{
 
-" ------------------------------ Plugins: Settings ------------------------------
 
 " Color settings applied after Solarized Plugin loaded
 
@@ -339,7 +344,7 @@ else
     let g:syntastic_vim_checkers=['vint']
 endif
 
-"-----------------------------------------------------------
+" ------------------------------ Python-mode ------------------------------{{{
 " vim as python ide below
 "-----------------------------------------------------------
 
@@ -390,4 +395,4 @@ endif
 " Enable breakpoints plugin
 let g:pymode_breakpoint = 1
 let g:pymode_breakpoint_key = 'b'
-" End Python-mode----------------------------------------------------
+" End Python-mode----------------------------------------------------}}}
