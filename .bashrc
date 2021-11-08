@@ -47,6 +47,10 @@ if [[ -f /usr/bin/virtualenvwrapper.sh ]]; then
     source /usr/bin/virtualenvwrapper.sh
 fi
 
+if [[ -f /usr/bin/bat ]]; then
+    alias cat="/usr/bin/bat --theme 'Solarized (dark)'"
+fi
+
 alias mandom="man \`find /usr/share/man -type f | shuf | head -1\`"
 alias mount="mount | column -t"
 
