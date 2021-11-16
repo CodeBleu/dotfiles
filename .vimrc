@@ -25,8 +25,8 @@ set wildmenu
 set wildmode=longest,full
 set foldmethod=marker
 set nofoldenable
-set nowrap
 set incsearch
+set hlsearch
 
 scriptencoding utf-8
 let mapleader = ' '
@@ -273,6 +273,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
 Plug 'dbeniamine/cheat.sh-vim'
 Plug 'vim-test/vim-test'
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
 "}}}
 
@@ -317,6 +318,9 @@ let g:UltiSnipsSnippetDirectories=[ 'UltiSnips', 'vim_user_snippets']
 let g:airline_powerline_fonts = 1
 let g:airline_theme='dark'
 let g:airline#extensions#hunks#non_zero_only = 1
+let g:airline_left_sep = "\uE0b4"
+let g:airline_right_sep = "\ue0b6"
+let g:airline_section_z = airline#section#create(["\uE0A1" . '%{line(".")}' . "\uE0A3" . '%{col(".")}'])
 
 "NeardTREE
 augroup nerdtree
@@ -333,6 +337,7 @@ augroup vimwiki
     " FOR Markdown formatting
     let g:vimwiki_list = [{'path': '~/vimwiki'}]
     let g:vimwiki_global_ext = 0
+    let g:vimwiki_folding = 'syntax:quick'
     " let g:vimwiki_list = [{'path': '~/vimwiki',
     "                       \ 'syntax': 'markdown', 'ext': '.md'}]
 augroup END
