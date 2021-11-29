@@ -23,6 +23,8 @@ HISTCONTROL=ignoreboth:erasedups
 PATH="$HOME/.local/bin:$PATH"
 PROMPT_DIRTRIM=2
 export EDITOR=/usr/bin/vim
+GPG_TTY=$(tty)
+export GPG_TTY
 
 # Put your fun stuff here.
 # Fix long line wrapping issues: https://askubuntu.com/questions/111840/ps1-problem-messing-up-cli

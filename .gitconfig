@@ -1,17 +1,19 @@
 [user]
 	name = Jason Hollis
 	email = jhollis@jdubb.net
+	signingkey = "F9AF7F330FE23D4B"
 [color]
 	ui = true
 [push]
 	default = simple
+	gpgsign = if-asked
 [core]
 	editor = vim
 	excludesfile = ~/.gitignore
 	whitespace = trailing-space,space-before-tab
 [alias]
 	lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %an%C(reset)%n''%C(white)%B%C(reset)' --all
+	lg2 = log --show-signature --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %an%C(reset)%n''%C(white)%B%C(reset)' --all
 	lg = !"git lg1"
 	fs = diff --stat HEAD
 	mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
@@ -34,3 +36,7 @@
 	ff = only
 [credential]
 	helper = cache
+[commit]
+	gpgsign = true
+[gpg]
+	program = /usr/bin/gpg
