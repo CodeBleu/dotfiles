@@ -64,11 +64,11 @@ gitPrompt() {
 
         branch="$(git branch -a | awk '/\*/ {print $2 }')"
         stats_ut="$(git status --porcelain 2>/dev/null | grep -c "^??" )"
-        stats_fc="$(git diff --stat HEAD | tail -n-1 | sed -r 's/[[:alpha:] ()]+//g'| cut -d ',' -f1)"
+        stats_fc="$(git diff --stat HEAD 2>/dev/null | tail -n-1 | sed -r 's/[[:alpha:] ()]+//g'| cut -d ',' -f1)"
         stats_fc="${stats_fc:-0}"
-        stats_la="$(git diff --stat HEAD | tail -n-1 | grep -ioP '(\d+) insertion*' | cut -d ' ' -f1)"
+        stats_la="$(git diff --stat HEAD 2>/dev/null | tail -n-1 | grep -ioP '(\d+) insertion*' | cut -d ' ' -f1)"
         stats_la="${stats_la:-0}"
-        stats_lr="$(git diff --stat HEAD | tail -n-1 | grep -ioP '(\d+) deletion*' | cut -d ' ' -f1)"
+        stats_lr="$(git diff --stat HEAD 2>/dev/null | tail -n-1 | grep -ioP '(\d+) deletion*' | cut -d ' ' -f1)"
         stats_lr="${stats_lr:-0}"
 
         if [[ "${GIT_PROMPT_EMAIL}" != "disable" ]]; then
@@ -115,6 +115,7 @@ fi
 if [[ $(grep -ioP '(?<=^id=)(\w*)' /etc/os-release) = 'gentoo' ]]; then
 
     alias nudav="sudo emerge -NuDav @world"
+    alias nudv="sudo emerge -NuDv @world"
 
 fi
 
