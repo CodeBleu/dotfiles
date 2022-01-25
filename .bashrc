@@ -133,3 +133,7 @@ if [[ "$KERNEL" =~ "Microsoft" ]]; then
         export PATH="$PATH:/mnt/c/Program Files/Oracle/VirtualBox"
     fi
 fi
+
+if [[ -f $HOME/.workrelated ]]; then
+    source "$HOME/.workrelated"
+fi
