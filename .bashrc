@@ -107,7 +107,7 @@ gitPrompt() {
 
 
 if (( $(tput -T "$TERM" colors) >= 8 )); then
-        export PS1="\[${Iblu}\][\[${txtcyn}\]\u\[${Iblu}\]@\[${txtgrn}\]\h\[${Icyn}\] \w\[${Iblu}\]]\[${reset}\]\$(gitPrompt)\[${Iblu}\] \\$ \[${reset}\]"
+        export PS1="⮦\[${Iblu}\][\[${txtcyn}\]\u\[${Iblu}\]@\[${txtgrn}\]\h\[${Icyn}\] \w\[${Iblu}\]]\[${reset}\]\\n⮡\$(gitPrompt)\[${Iblu}\] \\$ \[${reset}\]"
 else
         export PS1="[\u@\h \w ]\$(gitPrompt) \\$ "
 fi
