@@ -18,6 +18,7 @@
 	fs = diff --stat HEAD
 	mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
 	mbd = !sh -c 'git branch -d mr-upstream-$1' -
+	parent = "!git show-branch -a | grep '*' | grep -v \"$(git rev-parse --abbrev-ref HEAD)\" | head -n1 | sed 's/.*\\[\\(.*\\)\\].*/\\1/' | sed 's/[\\^~].*//'"
 [diff]
 	tool = vimdiff
 [merge]
