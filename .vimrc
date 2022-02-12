@@ -100,8 +100,6 @@ nnoremap bp :bp<cr>
 nnoremap bls :ls<cr>
 " Save all buffers
 nnoremap bua :b update<cr>
-" Needed for autoload of CtrlP Plugin
-nnoremap <C-p> :CtrlP<cr>
 " disable <esc> key and remap to 'kj'
 inoremap <esc> <nop>
 inoremap kj <esc>
@@ -119,6 +117,8 @@ nnoremap gf <C-W>f
 vnoremap gf <C-W>f
 nmap <localleader>x :!xdg-open %<cr><cr>
 nnoremap <localleader>gf :GitGutterFold<cr>
+" map Ctrl-P to use FZF"
+nnoremap <C-p> :FZF <Cr>
 
 "}}}
 
@@ -250,8 +250,8 @@ Plug 'davidhalter/jedi-vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'vim-scripts/tComment'
 Plug 'vim-scripts/Solarized'
-Plug 'ctrlpvim/ctrlp.vim', { 'on': 'CtrlP'}
 Plug 'vimwiki/vimwiki'
+Plug 'jremmen/vim-ripgrep'
 if v:version >= 800
     Plug 'dense-analysis/ale'
     Plug 'puremourning/vimspector', { 'for': 'python,sh'}
@@ -274,6 +274,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'dbeniamine/cheat.sh-vim'
 Plug 'vim-test/vim-test'
 Plug 'ryanoasis/vim-devicons'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 call plug#end()
 "}}}
 
