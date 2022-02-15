@@ -259,6 +259,7 @@ Plug 'vim-scripts/tComment'
 Plug 'vim-scripts/Solarized'
 Plug 'vimwiki/vimwiki'
 Plug 'jremmen/vim-ripgrep'
+Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
 if v:version >= 800
     Plug 'dense-analysis/ale'
     Plug 'puremourning/vimspector', { 'for': 'python,sh'}
@@ -329,6 +330,10 @@ let g:airline#extensions#hunks#non_zero_only = 1
 let g:airline_left_sep = "\uE0b4"
 let g:airline_right_sep = "\ue0b6"
 let g:airline_section_z = airline#section#create(["\uE0A1" . '%{line(".")}' . "\uE0A3" . '%{col(".")}'])
+
+" Terraform vim plugin config
+let g:terraform_fmt_on_save=1
+let g:terraform_align=1
 
 "NeardTREE
 augroup nerdtree
