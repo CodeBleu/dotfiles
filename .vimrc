@@ -32,6 +32,13 @@ scriptencoding utf-8
 let mapleader = ' '
 let maplocalleader = ','
 
+augroup spelling
+    " set spell on filetypes that it matters
+    autocmd!
+    autocmd FileType gitcommit setlocal spell
+    autocmd FileType markdown setlocal spell
+augroup END
+
 " Needed for javacomplete2
 augroup javacomplete2
     autocmd!
