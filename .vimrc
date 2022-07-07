@@ -34,6 +34,7 @@ let maplocalleader = ','
 
 augroup manualfolding
     " set folding type to manual for these files
+    autocmd!
     autocmd FileType terraform setlocal foldmethod=manual
     autocmd BufWinLeave ?* mkview
     autocmd BufWinEnter ?* silent loadview
