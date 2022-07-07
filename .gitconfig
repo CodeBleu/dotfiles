@@ -2,6 +2,8 @@
 	name = Jason Hollis
 	email = jhollis@jdubb.net
 	signingkey = "F9AF7F330FE23D4B"
+[includeIf "gitdir:work/"]
+	path = ~/.gitconfig-work
 [color]
 	ui = true
 [push]
@@ -19,7 +21,7 @@
 	# lg = !"git lg1"
 	fs = diff --stat HEAD
 	mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
-	mbd = !sh -c 'git branch -d mr-upstream-$1' -
+	mbd = !sh -c 'git branch -d mr-$1-$2' -
 	parent = "!git show-branch -a | grep '*' | grep -v \"$(git rev-parse --abbrev-ref HEAD)\" | head -n1 | sed 's/.*\\[\\(.*\\)\\].*/\\1/' | sed 's/[\\^~].*//'"
 [diff]
 	tool = vimdiff
