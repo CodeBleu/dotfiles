@@ -114,8 +114,8 @@ fi
 
 if [[ $(grep -ioP '(?<=^id=)(\w*)' /etc/os-release) = 'gentoo' ]]; then
 
-    alias nudav="sudo emerge -NuDav @world"
-    alias nudv="sudo emerge -NuDv @world"
+    alias nudav="sudo emerge -NuDav @world || until sudo emerge --resume --skipfirst; do :; done"
+    alias nudv="sudo emerge -NuDv @world || until sudo emerge --resume --skipfirst; do :; done"
 
 fi
 
