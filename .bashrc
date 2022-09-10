@@ -135,5 +135,6 @@ if [[ "$KERNEL" =~ "Microsoft" ]]; then
 fi
 
 if [[ -f $HOME/.workrelated ]]; then
+    #shellcheck disable=SC1091
     source "$HOME/.workrelated"
 fi

@@ -24,7 +24,8 @@ repos:
     hooks:
       - id: shellcheck
         # SC1071 - remove warning about zsh not supported
-        args: ['-e', 'SC1071']
+        # SC1091 - remove warning about Can't follow non-constant source
+        args: ['-e', 'SC1071,SC1091']
   - repo: https://github.com/Vimjas/vint
     rev: v0.4a3
     hooks:
