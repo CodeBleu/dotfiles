@@ -102,6 +102,7 @@ nnoremap <localleader>pe :lprev <cr>
 " open new horizontal/vertical windows
 nnoremap <localleader>w- :split new<cr>
 nnoremap <localleader>w\ :vsplit new<cr>
+nnoremap <localleader>sb :call Scratch()<cr>
 nnoremap <localleader>cc :call ColorColumn()<cr>
 " Remapped highlight search. <F4> is used in vimspector by default
 noremap <localleader>hl :set hlsearch! hlsearch?<cr>
@@ -167,7 +168,7 @@ inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 function! Scratch()
     split
-    resize 5
+    resize 10
     noswapfile hide enew
     setlocal buftype=nofile
     setlocal bufhidden=hide
