@@ -36,9 +36,17 @@ augroup manualfolding
     " set folding type to manual for these files
     autocmd!
     autocmd FileType terraform setlocal foldmethod=manual
-    autocmd BufWinLeave ?* mkview
-    autocmd BufWinEnter ?* silent loadview
 augroup END
+
+augroup AutoSaveGroup
+  autocmd!
+  " view files are about 500 bytes
+  " bufleave but not bufwinleave captures closing 2nd tab
+  " nested is needed by bufwrite* (if triggered via other autocmd)
+  " BufHidden for compatibility with `set hidden`
+  autocmd BufWinLeave,BufLeave,BufWritePost,BufHidden,QuitPre ?* nested silent! mkview!
+  autocmd BufWinEnter ?* silent! loadview
+augroup end
 
 augroup spelling
     " set spell on filetypes that it matters
@@ -134,7 +142,13 @@ vnoremap gf <C-W>f
 nmap <localleader>x :!xdg-open %<cr><cr>
 nnoremap <localleader>gf :GitGutterFold<cr>
 " map Ctrl-P to use FZF"
-nnoremap <C-p> :FZF <Cr>
+nnoremap <C-p> :GFiles <Cr>
+" Search current word under cursor
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --hidden --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+nnoremap <C-q> :Rg<CR>
 
 "}}}
 
@@ -267,6 +281,7 @@ Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'vim-scripts/tComment'
 Plug 'vim-scripts/Solarized'
 Plug 'vimwiki/vimwiki'
+Plug 'NLKNguyen/papercolor-theme'
 Plug 'jremmen/vim-ripgrep'
 Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
 if v:version >= 800
@@ -292,6 +307,7 @@ Plug 'dbeniamine/cheat.sh-vim'
 Plug 'vim-test/vim-test'
 Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 call plug#end()
 "}}}
 
@@ -307,7 +323,8 @@ nnoremap <localleader>tv :TestVisit<CR>
 
 " change theme to easier reading "
 set background=dark
-colorscheme solarized
+colorscheme PaperColor
+
 " And set some nice chars to do it with
 " set listchars=tab:»\ ,eol:¬,trail:-
 set listchars=tab:»-,trail:\ ,eol:¬
