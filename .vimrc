@@ -282,6 +282,7 @@ Plug 'vim-scripts/tComment'
 Plug 'vim-scripts/Solarized'
 Plug 'vimwiki/vimwiki'
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase'}
 Plug 'jremmen/vim-ripgrep'
 Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
 if v:version >= 800
@@ -319,23 +320,9 @@ nnoremap <localleader>ts :TestSuite<CR>
 nnoremap <localleader>tl :TestLast<CR>
 nnoremap <localleader>tv :TestVisit<CR>
 
-" Color settings applied after Solarized Plugin loaded
-
-" change theme to easier reading "
-set background=dark
-colorscheme PaperColor
-
 " And set some nice chars to do it with
 " set listchars=tab:»\ ,eol:¬,trail:-
 set listchars=tab:»-,trail:\ ,eol:¬
-" Specialkey is used for highlighing 'trail' above
-" see :help listchars
-hi Specialkey ctermbg=red
-hi NonText ctermfg=blue
-
-"set the Background color for highlighted searches"
-:hi Search cterm=bold ctermfg=grey ctermbg=darkblue
-:hi Wildmenu cterm=bold ctermfg=grey ctermbg=darkblue
 
 " Our personal snippets go into ~/dotfiles/vim_user_snippets.
 " By defining the below, it opens new file at this location.
@@ -360,6 +347,37 @@ let g:airline_section_z = airline#section#create(["\uE0A1" . '%{line(".")}' . "\
 " Terraform vim plugin config
 let g:terraform_fmt_on_save=1
 let g:terraform_align=1
+
+" Change Folded colors for PaperColor theme
+let g:PaperColor_Theme_Options = {
+            \ 'theme': {
+            \   'default.dark': {
+            \     'override' : {
+            \       'folded_bg': ['#5fafd7', '74'],
+            \       'folded_fg': ['#000000', '16']
+            \       }
+            \    }
+            \  }
+            \}
+
+if $TERM ==# 'xterm-256color'
+    set termguicolors
+endif
+
+" Color settings applied after Solarized Plugin loaded
+" change theme to easier reading "
+set background=dark
+colorscheme PaperColor
+
+" Color settings applied colorscheme set
+" Specialkey is used for highlighing 'trail'
+" see :help listchars
+if $TERM ==# 'xterm-256color'
+    hi SpecialKey guibg=red
+else
+    hi SpecialKey ctermbg=red
+endif
+
 
 "NeardTREE
 augroup nerdtree
