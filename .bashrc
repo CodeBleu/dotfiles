@@ -26,6 +26,10 @@ export EDITOR=/usr/bin/vim
 GPG_TTY=$(tty)
 export GPG_TTY
 
+# https://is.gd/suPdzP
+shopt -s histappend
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+
 # Put your fun stuff here.
 # Fix long line wrapping issues: https://askubuntu.com/questions/111840/ps1-problem-messing-up-cli
 #                                https://askubuntu.com/questions/251154/long-lines-overlap-in-bash-ps1-customized-prompt
