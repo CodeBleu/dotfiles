@@ -27,6 +27,13 @@ set foldmethod=marker
 set nofoldenable
 set incsearch
 set hlsearch
+" Try to only save folds for makeview and not
+" cause issues by saving stuff that causes issues
+" with other plugins --
+" https://stackoverflow.com/questions/26917336/vim-specific-mkview-and-loadview-in-order-to-avoid-issues
+set viewoptions-=options
+set sessionoptions-=options
+" -------------------------
 
 scriptencoding utf-8
 let mapleader = ' '
@@ -115,6 +122,11 @@ nnoremap <localleader>cc :call ColorColumn()<cr>
 " Remapped highlight search. <F4> is used in vimspector by default
 noremap <localleader>hl :set hlsearch! hlsearch?<cr>
 nnoremap <localleader>es :UltiSnipsEdit<cr>
+" quickfix navigation
+" Next quickfix
+nnoremap cn :cn<cr>
+" Previous quickfix
+nnoremap cp :cp<cr>
 " buffer navigation
 " Next buffer
 nnoremap bn :bn<cr>
@@ -143,12 +155,7 @@ nmap <localleader>x :!xdg-open %<cr><cr>
 nnoremap <localleader>gf :GitGutterFold<cr>
 " map Ctrl-P to use FZF"
 nnoremap <C-p> :GFiles <Cr>
-" Search current word under cursor
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --hidden --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview(), <bang>0)
-nnoremap <C-q> :Rg<CR>
+nnoremap <leader>q :Rg<CR>
 
 "}}}
 
@@ -392,11 +399,10 @@ augroup vimwiki
     map  <localleader><space> <Plug>VimwikiToggleListItem
     let g:vimwiki_listsyms = ' ○◐●✓'
     " FOR Markdown formatting
-    let g:vimwiki_list = [{'path': '~/vimwiki'}]
     let g:vimwiki_global_ext = 0
     let g:vimwiki_folding = 'syntax:quick'
-    " let g:vimwiki_list = [{'path': '~/vimwiki',
-    "                       \ 'syntax': 'markdown', 'ext': '.md'}]
+    let g:vimwiki_list = [{'path': '~/vimwiki',
+                          \ 'syntax': 'markdown', 'ext': '.md'}]
 augroup END
 "End vimwiki
 
