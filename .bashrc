@@ -62,7 +62,11 @@ alias mount="mount | column -t"
 
 gitPrompt() {
 
-    gitrepo=$(git rev-parse --is-inside-work-tree 2>/dev/null)
+    BASENAME=$(basename "$(pwd)")
+
+    if [[ $BASENAME != '.git' ]]; then
+        gitrepo=$(git rev-parse --is-inside-work-tree 2>/dev/null)
+    fi
 
     if [ "$gitrepo" ]; then
 
@@ -109,11 +113,10 @@ gitPrompt() {
     fi
 }
 
-
 if (( $(tput -T "$TERM" colors) >= 8 )); then
-        export PS1="⮦\[${Iblu}\][\[${txtcyn}\]\u\[${Iblu}\]@\[${txtgrn}\]\h\[${Icyn}\] \w\[${Iblu}\]]\[${reset}\]\\n⮡\$(gitPrompt)\[${Iblu}\] \\$ \[${reset}\]"
+    export PS1="⮦\[${Iblu}\][\[${txtcyn}\]\u\[${Iblu}\]@\[${txtgrn}\]\h\[${Icyn}\] \w\[${Iblu}\]]\[${reset}\]\\n⮡\$(gitPrompt)\[${Iblu}\] \\$ \[${reset}\]"
 else
-        export PS1="[\u@\h \w ]\$(gitPrompt) \\$ "
+    export PS1="[\u@\h \w ]\$(gitPrompt) \\$ "
 fi
 
 if [[ $(grep -ioP '(?<=^id=)(\w*)' /etc/os-release) = 'gentoo' ]]; then
