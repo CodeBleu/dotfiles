@@ -127,13 +127,15 @@ nnoremap <localleader>es :UltiSnipsEdit<cr>
 nnoremap cn :cn<cr>
 " Previous quickfix
 nnoremap cp :cp<cr>
+" :Commits remap FZF
+nnoremap <localleader>gc :Commits<cr>
 " buffer navigation
 " Next buffer
 nnoremap bn :bn<cr>
 " Previous buffer
 nnoremap bp :bp<cr>
-" Buffer list
-nnoremap bls :ls<cr>
+" Buffer list FZF
+nnoremap bl :Buffers<cr>
 " Save all buffers
 nnoremap bua :b update<cr>
 " disable <esc> key and remap to 'kj'
