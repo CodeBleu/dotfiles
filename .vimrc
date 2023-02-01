@@ -136,6 +136,10 @@ nnoremap bn :bn<cr>
 nnoremap bp :bp<cr>
 " Buffer list FZF
 nnoremap bl :Buffers<cr>
+" Buffer Lines (current buffer)
+nnoremap <localleader>bl :BLines<cr>
+" Buffer Lines (All buffers)
+nnoremap <localleader>al :Lines<cr>
 " Save all buffers
 nnoremap bua :b update<cr>
 " disable <esc> key and remap to 'kj'
