@@ -361,6 +361,7 @@ let g:airline_section_z = airline#section#create(["\uE0A1" . '%{line(".")}' . "\
 let g:terraform_fmt_on_save=1
 let g:terraform_align=1
 
+let g:Hexokinase_highlighters = ['backgroundfull']
 " Change Folded colors for PaperColor theme
 let g:PaperColor_Theme_Options = {
             \ 'theme': {
