@@ -374,7 +374,7 @@ let g:PaperColor_Theme_Options = {
             \  }
             \}
 
-if $TERM ==# 'xterm-256color'
+if $TERM ==# 'xterm-256color' || $TERM ==# 'tmux-256color'
     set termguicolors
 endif
 
@@ -386,7 +386,7 @@ colorscheme PaperColor
 " Color settings applied colorscheme set
 " Specialkey is used for highlighing 'trail'
 " see :help listchars
-if $TERM ==# 'xterm-256color'
+if $TERM ==# 'xterm-256color' || $TERM ==# 'tmux-256color'
     hi SpecialKey guibg=red
 else
     hi SpecialKey ctermbg=red

@@ -14,6 +14,9 @@
 	excludesfile = ~/.gitignore
 	whitespace = trailing-space,space-before-tab
 [alias]
+	d = difftool
+	bav = !sh -c 'git --no-pager branch -av'
+	bvv = !sh -c 'git --no-pager branch -vv'
 	lga = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
 	lg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
 	lgda = log --show-signature --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %an%C(reset)%n''%C(white)%B%C(reset)' --all
@@ -21,7 +24,9 @@
 	# lg = !"git lg1"
 	fs = diff --stat HEAD
 	mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
+	pr = !sh -c 'git fetch $1 pull/$2/head:pr-$1-$2 && git checkout pr-$1-$2' -
 	mbd = !sh -c 'git branch -d mr-$1-$2' -
+	pbd = !sh -c 'git branch -d pr-$1-$2' -
 	parent = "!git show-branch -a | grep '*' | grep -v \"$(git rev-parse --abbrev-ref HEAD)\" | head -n1 | sed 's/.*\\[\\(.*\\)\\].*/\\1/' | sed 's/[\\^~].*//'"
 [diff]
 	tool = vimdiff
@@ -31,8 +36,6 @@
 	driver = true
 [difftool]
 	prompt = false
-[alias]
-	d = difftool
 [fetch]
 	prune = true
 [apply]
