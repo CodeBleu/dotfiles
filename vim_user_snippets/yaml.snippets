@@ -4,14 +4,14 @@ endsnippet
 
 snippet file
 - name: $1
-  file:
+  ansible.builtin.file:
     path: "$2"
     state: $3
 endsnippet
 
 snippet package
 - name: $1
-  package:
+  ansible.builtin.package:
     name:
       - $2
     state: $3
@@ -19,7 +19,7 @@ endsnippet
 
 snippet cmd
 - name: $1
-  command:
+  ansible.builtin.command:
     cmd: $2
   changed_when: false
   register: $3

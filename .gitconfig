@@ -32,6 +32,8 @@
 	tool = vimdiff
 [merge]
 	tool = vimdiff
+[mergetool]
+	keepBackup = false
 [merge "ours"]
 	driver = true
 [difftool]

@@ -22,8 +22,8 @@ bind -m vi-insert "\C-l":clear-screen
 # bind -m vi-command 'Control-l: clear-screen'
 # bind -m vi-insert 'Control-l: clear-screen'
 
-MAKEOPTS="--jobs 2 --load-average 5"
 HISTCONTROL=ignoreboth:erasedups
+export MAKEOPTS="--jobs 2 --load-average 5"
 export GOSUMDB="sum.golang.org"
 export GOROOT=/usr/lib/go
 export GOPATH=~/go
@@ -126,9 +126,9 @@ fi
 
 if [[ $(grep -ioP '(?<=^id=)(\w*)' /etc/os-release) = 'gentoo' ]]; then
 
-    alias nudav="sudo emerge -NuDav @world || until sudo emerge --resume --skipfirst; do :; done"
+    alias nudav="sudo emerge -NuDav @world"
+    alias nudavr="sudo emerge -NuDav @world || until sudo emerge --skipfirst; do :; done"
     alias nudv="sudo emerge -NuDv @world || until sudo emerge --resume --skipfirst; do :; done"
-    alias ndv="sudo emerge -NuDav @world"
 
 fi
 
@@ -165,3 +165,5 @@ if [[ -f $HOME/.workrelated ]]; then
     #shellcheck disable=SC1091
     source "$HOME/.workrelated"
 fi
+
+eval "$(direnv hook bash)"

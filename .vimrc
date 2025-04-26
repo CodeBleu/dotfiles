@@ -33,6 +33,7 @@ set hlsearch
 " https://stackoverflow.com/questions/26917336/vim-specific-mkview-and-loadview-in-order-to-avoid-issues
 set viewoptions-=options
 set sessionoptions-=options
+set backspace=indent,eol,start
 " -------------------------
 
 scriptencoding utf-8
@@ -42,7 +43,7 @@ let maplocalleader = ','
 augroup manualfolding
     " set folding type to manual for these files
     autocmd!
-    autocmd FileType terraform setlocal foldmethod=manual
+    autocmd FileType terraform,tmux,conf setlocal foldmethod=manual
 augroup END
 
 augroup AutoSaveGroup
@@ -167,6 +168,14 @@ nnoremap <localleader>gf :GitGutterFold<cr>
 nnoremap <C-p> :GFiles <Cr>
 nnoremap <leader>q :Rg<CR>
 
+" Please remap my Ctrl-N and Ctrl-P for codeium to something else so i can
+" cycle through the suggestions
+inoremap <C-q> <Cmd>call codeium#CycleCompletions(1)<CR>
+inoremap <C-w> <Cmd>call codeium#CycleCompletions(-1)<CR>
+inoremap <C-x> <Cmd>call codeium#Clear()<CR>
+" toggle off codeiumtoggle
+" codeium#Toggle() unknown function
+nnoremap <C-e> :CodeiumToggle<CR>
 "}}}
 
 " ------------------------------ Functions/misc ------------------------------{{{
