@@ -18,9 +18,16 @@ fi
 set -o vi
 # fix issue with ctrl-l not clearing screen in bash vi mode
 bind -m vi-insert "\C-l":clear-screen
+# If above doesn't work, try
+# bind -m vi-command 'Control-l: clear-screen'
+# bind -m vi-insert 'Control-l: clear-screen'
 
+MAKEOPTS="--jobs 2 --load-average 5"
 HISTCONTROL=ignoreboth:erasedups
-PATH="$HOME/.local/bin:$PATH"
+export GOSUMDB="sum.golang.org"
+export GOROOT=/usr/lib/go
+export GOPATH=~/go
+PATH="$HOME/.local/bin:$HOME/.cargo/bin:$GOPATH/bin:$PATH"
 PROMPT_DIRTRIM=2
 export EDITOR=/usr/bin/vim
 GPG_TTY=$(tty)
@@ -57,8 +64,6 @@ if [[ -f /usr/bin/bat ]]; then
     alias cat="/usr/bin/bat --theme 'Solarized (dark)'"
 fi
 
-alias mandom="man \`find /usr/share/man -type f | shuf | head -1\`"
-alias mount="mount | column -t"
 
 gitPrompt() {
 
@@ -123,11 +128,26 @@ if [[ $(grep -ioP '(?<=^id=)(\w*)' /etc/os-release) = 'gentoo' ]]; then
 
     alias nudav="sudo emerge -NuDav @world || until sudo emerge --resume --skipfirst; do :; done"
     alias nudv="sudo emerge -NuDv @world || until sudo emerge --resume --skipfirst; do :; done"
+    alias ndv="sudo emerge -NuDav @world"
 
 fi
 
 alias gitbbd='for branch in `git branch -r | grep -iv head`; do echo -e `git show --format="%ci %cr" $branch | head -n 1` \\t$branch; done | sort -r'
 alias ls='ls --color=auto'
+alias k='kubecolor'
+complete -o default -F __start_kubectl k
+alias kc='kubectx'
+complete -F _kube_context kubectx kc
+alias kgp='k get pods -A'
+alias kgn='k get nodes -A'
+alias kgd='k get deployments -A'
+alias kgs='k get svc -A'
+alias kgr='k get rs -A'
+alias kge='k get ev -A'
+alias sudo='sudo -E '
+alias vim='nvim'
+alias mandom="man \`find /usr/share/man -type f | shuf | head -1\`"
+alias mount="mount | column -t"
 
 KERNEL=$(uname -a)
 

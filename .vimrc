@@ -79,7 +79,7 @@ augroup END
 " Settings for yaml files .ansible is added for ansible-lint
 augroup ansible-lint
     autocmd!
-    autocmd BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml.ansible foldmethod=manual
+    autocmd BufNewFile,BufReadPost *.{yaml} set filetype=yaml.ansible foldmethod=manual
     autocmd FileType yaml.ansible setlocal ts=2 sts=2 sw=2 expandtab
 augroup END
 
@@ -122,13 +122,17 @@ nnoremap <localleader>cc :call ColorColumn()<cr>
 " Remapped highlight search. <F4> is used in vimspector by default
 noremap <localleader>hl :set hlsearch! hlsearch?<cr>
 nnoremap <localleader>es :UltiSnipsEdit<cr>
+" Go shortcuts
+nnoremap <localleader>gt :GoTest<cr>
+nnoremap <localleader>gb :GoBuild<cr>
+nnoremap <localleader>gc :GoCoverageToggle<cr>
 " quickfix navigation
 " Next quickfix
 nnoremap cn :cn<cr>
 " Previous quickfix
 nnoremap cp :cp<cr>
 " :Commits remap FZF
-nnoremap <localleader>gc :Commits<cr>
+nnoremap <leader>gc :Commits<cr>
 " buffer navigation
 " Next buffer
 nnoremap bn :bn<cr>
@@ -269,61 +273,71 @@ endif
 "     :syntax on
 
 " Install vim-plug if not found
-if !exists('g:syntax_on')
-    syntax enable
-endif
+if !has('nvim')
+    if !exists('g:syntax_on')
+        syntax enable
+    endif
 
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-endif
+    if empty(glob('~/.vim/autoload/plug.vim'))
+      silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    endif
 
-" Run PlugInstall if there are missing plugins
-augroup vimplug
-    autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-      \| PlugInstall --sync | source $MYVIMRC
-    \| endif
-augroup END
+    " Run PlugInstall if there are missing plugins
+    augroup vimplug
+        autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+          \| PlugInstall --sync | source $MYVIMRC
+        \| endif
+    augroup END
 
-call plug#begin('~/.vim/plugged')
-" The plugins you install will be listed here
-Plug 'junegunn/vim-plug'
-Plug 'klen/python-mode'
-Plug 'davidhalter/jedi-vim'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'vim-scripts/tComment'
-Plug 'vim-scripts/Solarized'
-Plug 'vimwiki/vimwiki'
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase'}
-Plug 'jremmen/vim-ripgrep'
-Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
-if v:version >= 800
-    Plug 'dense-analysis/ale'
-    Plug 'puremourning/vimspector', { 'for': 'python,sh'}
-else
-    Plug 'scrooloose/syntastic'
+    call plug#begin('~/.vim/plugged')
+    " The plugins you install will be listed here
+    Plug 'junegunn/vim-plug'
+    " Plug 'klen/python-mode'
+    " Plug 'davidhalter/jedi-vim'
+    Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+    Plug 'vim-scripts/tComment'
+    Plug 'vim-scripts/Solarized'
+    Plug 'vimwiki/vimwiki'
+    Plug 'NLKNguyen/papercolor-theme'
+    Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase'}
+    Plug 'jremmen/vim-ripgrep'
+    Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
+    Plug 'hashivim/vim-packer', { 'for': 'hcl' }
+    if v:version >= 800
+        Plug 'dense-analysis/ale'
+        Plug 'puremourning/vimspector', { 'for': 'python,sh'}
+    else
+        " Plug 'scrooloose/syntastic'
+    endif
+    Plug 'artur-shaik/vim-javacomplete2', { 'for': 'java'}
+    " if has('python3') && v:version >= 740
+    "     Plug 'SirVer/ultisnips'
+    "     Plug 'honza/vim-snippets'
+    " endif
+    Plug 'Raimondi/delimitMate'
+    Plug 'tpope/vim-surround'
+    Plug 'pearofducks/ansible-vim'
+    Plug 'junegunn/vader.vim', { 'for': 'vim' }
+    Plug 'tpope/vim-fugitive'
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+    Plug 'airblade/vim-gitgutter'
+    " Plug 'dbeniamine/cheat.sh-vim'
+    Plug 'vim-test/vim-test'
+    Plug 'embear/vim-localvimrc'
+    Plug 'ryanoasis/vim-devicons'
+    " Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    " Plug 'junegunn/fzf.vim'
+    Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+    " --- Puppet/Ruby --- "
+    Plug 'rodjek/vim-puppet'
+    Plug 'vim-ruby/vim-ruby'
+    Plug 'godlygeek/tabular'
+    Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
+    call plug#end()
 endif
-Plug 'artur-shaik/vim-javacomplete2', { 'for': 'java'}
-if has('python3') && v:version >= 740
-    Plug 'SirVer/ultisnips'
-    Plug 'honza/vim-snippets'
-endif
-Plug 'Raimondi/delimitMate'
-Plug 'tpope/vim-surround'
-Plug 'pearofducks/ansible-vim'
-Plug 'junegunn/vader.vim', { 'for': 'vim' }
-Plug 'tpope/vim-fugitive'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'airblade/vim-gitgutter'
-Plug 'dbeniamine/cheat.sh-vim'
-Plug 'vim-test/vim-test'
-Plug 'ryanoasis/vim-devicons'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-call plug#end()
-"}}}
+    "}}}
 
 " ------------------------------ Plugins: Settings ------------------------------{{{
 
@@ -337,6 +351,16 @@ nnoremap <localleader>tv :TestVisit<CR>
 " set listchars=tab:»\ ,eol:¬,trail:-
 set listchars=tab:»-,trail:\ ,eol:¬
 
+" disable vim-go linting and use ALE for go
+let g:go_metalinter_autosave = 0
+let g:go_metalinter_enabled = 0
+let g:ale_linters = {
+            \    'go': ['gofmt', 'golangci-lint', 'govet'],
+            \}
+
+let g:ale_go_golangci_lint_package = 1
+
+let g:localvimrc_ask = 0
 " Our personal snippets go into ~/dotfiles/vim_user_snippets.
 " By defining the below, it opens new file at this location.
 let g:UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit='~/dotfiles/vim_user_snippets'
@@ -387,9 +411,9 @@ colorscheme PaperColor
 " Specialkey is used for highlighing 'trail'
 " see :help listchars
 if $TERM ==# 'xterm-256color' || $TERM ==# 'tmux-256color'
-    hi SpecialKey guibg=red
+    " hi SpecialKey guibg=red
 else
-    hi SpecialKey ctermbg=red
+    " hi SpecialKey ctermbg=red
 endif
 
 
@@ -431,6 +455,11 @@ else
     let g:syntastic_yaml_checkers=['yamllint']
     let g:syntastic_vim_checkers=['vint']
 endif
+
+" let g:go_fmt_command = 'goimports"
+" let g:go_fmt_autosave = 1
+" let g:go_fmt_autosave = 0
+"
 
 " ------------------------------ Python-mode ------------------------------{{{
 " vim as python ide below

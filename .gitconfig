@@ -1,7 +1,7 @@
 [user]
 	name = Jason Hollis
 	email = 400979+CodeBleu@users.noreply.github.com
-	signingkey = "F9AF7F330FE23D4B"
+	signingkey = "1B59AA074288D09B"
 [includeIf "gitdir:work/"]
 	path = ~/.gitconfig-work
 [color]
