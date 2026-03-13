@@ -1,0 +1,19 @@
+# ============================================================
+# ~/.tmux.local.conf  — LAPTOP example
+# ============================================================
+# This file is NOT tracked in git (add to .gitignore).
+# Copy this to ~/.tmux.local.conf on each machine and adjust.
+#
+# This file is sourced at the end of ~/.tmux.conf, so any
+# setting here overrides the base config.
+# ============================================================
+
+# Battery segment — only set this on machines that have a battery.
+# The base config leaves @battery_segment empty (no-op on desktop).
+set -g @battery_segment "#[bg=#{@c_sb_navy},fg=#{@c_blue}] #(~/.local/bin/battery-icon.sh) "
+
+# ── Work laptop example ──────────────────────────────────────
+# Uncomment to tint the status bar a subtle warm tone on work machines
+# so you always know which machine you're on at a glance:
+# set -g status-style "fg=#AAAAAA,bg=#1a1510"
+# set -g window-status-style "fg=#888888,bg=#1a1510"
