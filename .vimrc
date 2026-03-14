@@ -33,7 +33,6 @@ set hlsearch
 " https://stackoverflow.com/questions/26917336/vim-specific-mkview-and-loadview-in-order-to-avoid-issues
 set viewoptions-=options
 set sessionoptions-=options
-set backspace=indent,eol,start
 " -------------------------
 
 scriptencoding utf-8
@@ -166,13 +165,21 @@ nmap <localleader>x :!xdg-open %<cr><cr>
 nnoremap <localleader>gf :GitGutterFold<cr>
 " map Ctrl-P to use FZF"
 nnoremap <C-p> :GFiles <Cr>
+" Map Ctrl + J to next suggestion for Codeium
+imap <C-j> <C-n>
+" Map Ctrl + J to next suggestion for Codeium
+imap <C-k> <C-p>
 nnoremap <leader>q :Rg<CR>
-
 " Please remap my Ctrl-N and Ctrl-P for codeium to something else so i can
 " cycle through the suggestions
-inoremap <C-q> <Cmd>call codeium#CycleCompletions(1)<CR>
-inoremap <C-w> <Cmd>call codeium#CycleCompletions(-1)<CR>
+inoremap <C-p> <Cmd>call codeium#CycleCompletions(1)<CR>
+inoremap <C-n> <Cmd>call codeium#CycleCompletions(-1)<CR>
 inoremap <C-x> <Cmd>call codeium#Clear()<CR>
+" markdown preview
+nnoremap <localleader>mp :MarkdownPreview<CR>
+nnoremap <localleader>ms :MarkdownPreviewStop<CR>
+nnoremap <localleader>mt :MarkdownPreviewToggle<CR>
+
 " toggle off codeiumtoggle
 " codeium#Toggle() unknown function
 nnoremap <C-e> :CodeiumToggle<CR>
@@ -180,9 +187,18 @@ nnoremap <C-e> :CodeiumToggle<CR>
 
 " ------------------------------ Functions/misc ------------------------------{{{
 
-" Toggle set paste/set nopaste
-set pastetoggle=<F5>
 
+" function! SetPoetryPythonPath()
+"   " Get the path of the Python interpreter in the current Poetry environment
+"   let g:python3_host_prog = trim(system("poetry env info --path")) . "/bin/python"
+" endfunction
+"
+" augroup PoetryPythonPath
+"   autocmd!
+"   " Update the Python path whenever entering the Poetry shell
+"   autocmd User BufEnter,BufNewFile * call SetPoetryPythonPath()
+" augroup END
+"
 function! WrapForTmux(s)
   if !exists('$TMUX')
     return a:s
@@ -302,7 +318,7 @@ if !has('nvim')
     call plug#begin('~/.vim/plugged')
     " The plugins you install will be listed here
     Plug 'junegunn/vim-plug'
-    " Plug 'klen/python-mode'
+    Plug 'klen/python-mode'
     " Plug 'davidhalter/jedi-vim'
     Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
     Plug 'vim-scripts/tComment'
@@ -317,13 +333,13 @@ if !has('nvim')
         Plug 'dense-analysis/ale'
         Plug 'puremourning/vimspector', { 'for': 'python,sh'}
     else
-        " Plug 'scrooloose/syntastic'
+        Plug 'scrooloose/syntastic'
     endif
     Plug 'artur-shaik/vim-javacomplete2', { 'for': 'java'}
-    " if has('python3') && v:version >= 740
-    "     Plug 'SirVer/ultisnips'
-    "     Plug 'honza/vim-snippets'
-    " endif
+    if has('python3') && v:version >= 740
+        Plug 'SirVer/ultisnips'
+        Plug 'honza/vim-snippets'
+    endif
     Plug 'Raimondi/delimitMate'
     Plug 'tpope/vim-surround'
     Plug 'pearofducks/ansible-vim'
@@ -332,19 +348,19 @@ if !has('nvim')
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
     Plug 'airblade/vim-gitgutter'
-    " Plug 'dbeniamine/cheat.sh-vim'
     Plug 'vim-test/vim-test'
-    Plug 'embear/vim-localvimrc'
     Plug 'ryanoasis/vim-devicons'
-    " Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-    " Plug 'junegunn/fzf.vim'
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    Plug 'junegunn/fzf.vim'
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
     " --- Puppet/Ruby --- "
     Plug 'rodjek/vim-puppet'
     Plug 'vim-ruby/vim-ruby'
     Plug 'godlygeek/tabular'
     Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
+    " Plug 'HakonHarnes/img-clip.nvim'
     call plug#end()
+
 endif
     "}}}
 
@@ -369,7 +385,6 @@ let g:ale_linters = {
 
 let g:ale_go_golangci_lint_package = 1
 
-let g:localvimrc_ask = 0
 " Our personal snippets go into ~/dotfiles/vim_user_snippets.
 " By defining the below, it opens new file at this location.
 let g:UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit='~/dotfiles/vim_user_snippets'
@@ -400,12 +415,13 @@ let g:PaperColor_Theme_Options = {
             \ 'theme': {
             \   'default.dark': {
             \     'override' : {
-            \       'folded_bg': ['#5fafd7', '74'],
-            \       'folded_fg': ['#000000', '16']
+            \       'folded_fg': ['#83a598', '74'],
+            \       'folded_bg': ['#282c34', '16']
             \       }
             \    }
             \  }
             \}
+let vim_markdown_preview_github=1
 
 if $TERM ==# 'xterm-256color' || $TERM ==# 'tmux-256color'
     set termguicolors
@@ -419,11 +435,26 @@ colorscheme PaperColor
 " Color settings applied colorscheme set
 " Specialkey is used for highlighing 'trail'
 " see :help listchars
-if $TERM ==# 'xterm-256color' || $TERM ==# 'tmux-256color'
-    " hi SpecialKey guibg=red
-else
-    " hi SpecialKey ctermbg=red
-endif
+" if $TERM ==# 'xterm-256color'
+"     " hi SpecialKey guibg=red
+"     hi EndOfLineSpace guibg=red
+" else
+"     " hi SpecialKey ctermbg=red
+"     hi EndOfLineSpace ctermbg=red
+" endif
+" match EndOfLineSpace /\s\+$/
+
+" Define a highlight group for spaces at EOL
+:highlight EndOfLineSpace ctermbg=red guibg=red
+
+" Apply the highlighting
+:match EndOfLineSpace /\s\+$/
+
+" Ensure highlighting is applied when opening files
+:autocmd BufWinEnter * match EndOfLineSpace /\s\+$/
+
+" Clear matches when leaving a window
+:autocmd BufWinLeave * match
 
 
 "NeardTREE
@@ -443,14 +474,16 @@ augroup vimwiki
     let g:vimwiki_folding = 'syntax:quick'
     let g:vimwiki_list = [{'path': '~/vimwiki',
                           \ 'syntax': 'markdown', 'ext': '.md'}]
+    let g:vimwiki_markdown_link_ext = 1
 augroup END
 "End vimwiki
 
 if v:version >= 800
     augroup ale
         let g:ale_fixers = {
-          \ '*': ['remove_trailing_lines', 'trim_whitespace']
-          \ }
+            \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+            \ 'vue': ['trim_whitespace']
+            \ }
         let g:ale_fix_on_save = 1
     augroup END
 else
