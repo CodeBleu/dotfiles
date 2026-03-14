@@ -124,7 +124,7 @@ else
     export PS1="[\u@\h \w ]\$(gitPrompt) \\$ "
 fi
 
-if [[ $(grep -ioP '(?<=^id=)(\w*)' /etc/os-release) = 'gentoo' ]]; then
+if [[ $(grep '^ID=' /etc/os-release | cut -d'=' -f2 | tr -d "'") = 'gentoo' ]]; then
 
     alias nudav="sudo emerge -NuDav @world"
     alias nudavr="sudo emerge -NuDav @world || until sudo emerge --skipfirst; do :; done"
@@ -134,10 +134,9 @@ fi
 
 alias gitbbd='for branch in `git branch -r | grep -iv head`; do echo -e `git show --format="%ci %cr" $branch | head -n 1` \\t$branch; done | sort -r'
 alias ls='ls --color=auto'
+alias l='eza -la --group-directories-first --icons --git --color-scale=size'
 alias k='kubecolor'
 complete -o default -F __start_kubectl k
-alias kc='kubectx'
-complete -F _kube_context kubectx kc
 alias kgp='k get pods -A'
 alias kgn='k get nodes -A'
 alias kgd='k get deployments -A'
@@ -148,6 +147,10 @@ alias sudo='sudo -E '
 alias vim='nvim'
 alias mandom="man \`find /usr/share/man -type f | shuf | head -1\`"
 alias mount="mount | column -t"
+alias ctop="docker run --rm -ti \
+  --name=ctop \
+  --volume /var/run/docker.sock:/var/run/docker.sock:ro \
+  quay.io/vektorlab/ctop:latest"
 
 KERNEL=$(uname -a)
 
@@ -167,3 +170,8 @@ if [[ -f $HOME/.workrelated ]]; then
 fi
 
 eval "$(direnv hook bash)"
+
+
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
