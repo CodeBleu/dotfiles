@@ -165,16 +165,7 @@ nmap <localleader>x :!xdg-open %<cr><cr>
 nnoremap <localleader>gf :GitGutterFold<cr>
 " map Ctrl-P to use FZF"
 nnoremap <C-p> :GFiles <Cr>
-" Map Ctrl + J to next suggestion for Codeium
-imap <C-j> <C-n>
-" Map Ctrl + J to next suggestion for Codeium
-imap <C-k> <C-p>
 nnoremap <leader>q :Rg<CR>
-" Please remap my Ctrl-N and Ctrl-P for codeium to something else so i can
-" cycle through the suggestions
-inoremap <C-p> <Cmd>call codeium#CycleCompletions(1)<CR>
-inoremap <C-n> <Cmd>call codeium#CycleCompletions(-1)<CR>
-inoremap <C-x> <Cmd>call codeium#Clear()<CR>
 " markdown preview
 nnoremap <localleader>mp :MarkdownPreview<CR>
 nnoremap <localleader>ms :MarkdownPreviewStop<CR>
@@ -183,6 +174,8 @@ nnoremap <localleader>mt :MarkdownPreviewToggle<CR>
 " toggle off codeiumtoggle
 " codeium#Toggle() unknown function
 nnoremap <C-e> :CodeiumToggle<CR>
+" use default codeium mappings
+" M-[ and M-] for navigation in the completion list (M is the alt key)
 "}}}
 
 " ------------------------------ Functions/misc ------------------------------{{{
@@ -391,7 +384,7 @@ let g:UltiSnipsSnippetStorageDirectoryForUltiSnipsEdit='~/dotfiles/vim_user_snip
 " Open UltiSnipEdit in split window
 let g:UltiSnipsEditSplit='vertical'
 " Change <tab> for Ultisnips so it will work in vimwiki tables
-let g:UltiSnipsExpandTrigger='<c-p>'
+let g:UltiSnipsExpandTrigger='<c-y>'
 let g:UltiSnipsListSnippets='<c-j>'
 let g:UltiSnipsJumpForwardTrigger='<c-l>'
 let g:UltiSnipsJumpBackwardTrigger='<c-h>'
