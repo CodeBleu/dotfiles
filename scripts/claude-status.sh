@@ -3,7 +3,7 @@ enabled=$(tmux showenv -g TMUX_SHOW_CLAUDE 2>/dev/null | cut -d= -f2)
 [ "$enabled" = "1" ] || exit 0
 
 CACHE="$HOME/.claude/.status-cache"
-CACHE_AGE=900  # 15 minutes
+CACHE_AGE=1800  # 30 minutes
 
 if [ -f "$CACHE" ] && [ $(( $(date +%s) - $(stat -c %Y "$CACHE") )) -lt $CACHE_AGE ]; then
   cat "$CACHE"
@@ -12,13 +12,27 @@ fi
 
 CREDS="$HOME/.claude/.credentials.json"
 TOKEN=$(jq -r '.claudeAiOauth.accessToken' "$CREDS" 2>/dev/null)
-[ -z "$TOKEN" ] && echo " 🤖 ⚠ no token" && exit 0
+EXPIRES=$(jq -r '.claudeAiOauth.expiresAt' "$CREDS" 2>/dev/null)
+
+[ -z "$TOKEN" ] || [ "$TOKEN" = "null" ] && echo " 🤖 ⚠ no token" && exit 0
+
+# Check token expiry (expiresAt is in milliseconds)
+if [ -n "$EXPIRES" ] && [ "$EXPIRES" != "null" ]; then
+  NOW_MS=$(( $(date +%s) * 1000 ))
+  if [ "$NOW_MS" -gt "$EXPIRES" ]; then
+    # Clear stale cache so we don't show old data
+    rm -f "$CACHE"
+    echo " 🤖 ⚠ run: claude auth login"
+    exit 0
+  fi
+fi
 
 DATA=$(curl -s --max-time 5 "https://api.anthropic.com/api/oauth/usage" \
   -H "Authorization: Bearer $TOKEN" \
   -H "anthropic-beta: oauth-2025-04-20" 2>/dev/null)
 
 if echo "$DATA" | grep -q "token_expired"; then
+  rm -f "$CACHE"
   echo " 🤖 ⚠ run: claude auth login"
   exit 0
 fi
