@@ -2,8 +2,18 @@
 	name = Jason Hollis
 	email = 400979+CodeBleu@users.noreply.github.com
 	signingkey = "1B59AA074288D09B"
-[includeIf "gitdir:work/"]
-	path = ~/.gitconfig-work
+# [includeIf "gitdir:work/"]
+# 	path = ~/.gitconfig-work
+# [includeIf "gitdir:AC/"]
+# 	path = ~/.gitconfig-work
+# [includeIf "gitdir:SDS/"]
+# 	path = ~/.gitconfig-sds
+[includeIf "gitdir:AC/github/"]
+	path = ~/.gitconfig-work-github
+[includeIf "gitdir:AC/gitlab/"]
+	path = ~/.gitconfig-work-gitlab
+[includeIf "gitdir:SDS/"]
+	path = ~/.gitconfig-sds
 [color]
 	ui = true
 [push]
@@ -17,8 +27,8 @@
 	d = difftool
 	bav = !sh -c 'git --no-pager branch -av'
 	bvv = !sh -c 'git --no-pager branch -vv'
-	lga = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-	lg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+	lga = !git --no-pager log --graph --abbrev-commit --decorate --format=tformat:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+	lg = !git --no-pager log --graph --abbrev-commit --decorate --format=tformat:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
 	lgda = log --show-signature --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %an%C(reset)%n''%C(white)%B%C(reset)' --all
 	lgd = log --show-signature --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %an%C(reset)%n''%C(white)%B%C(reset)'
 	# lg = !"git lg1"
@@ -50,3 +60,10 @@
 	gpgsign = true
 [gpg]
 	program = /usr/bin/gpg
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[rebase]
+	autosquash = true
