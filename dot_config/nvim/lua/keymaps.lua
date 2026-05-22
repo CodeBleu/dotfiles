@@ -1,0 +1,9 @@
+-- -- Markdown Live Preview
+-- vim.keymap.set("n", "<leader>mp", "<cmd>LivePreview start<cr>",
+--   { desc = "Live Preview: Start", silent = true })
+--
+-- vim.keymap.set("n", "<leader>ms", "<cmd>LivePreview close<cr>",
+--   { desc = "Live Preview: Stop", silent = true })
+--
+-- vim.keymap.set("n", "<leader>mf", "<cmd>LivePreview pick<cr>",
+--   { desc = "Live Preview: Pick file", silent = true })
