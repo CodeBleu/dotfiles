@@ -129,6 +129,11 @@ if [[ $(grep '^ID=' /etc/os-release | cut -d'=' -f2 | tr -d "'") = 'gentoo' ]]; 
     alias nudav="sudo emerge -NuDav @world"
     alias nudavr="sudo emerge -NuDav @world || until sudo emerge --skipfirst; do :; done"
     alias nudv="sudo emerge -NuDv @world || until sudo emerge --resume --skipfirst; do :; done"
+    # to auto run snapper snap if using btrfs snaps
+    alias emerge="sem"
+    alias btrnudav="sudo sem -NuDav @world"
+    alias btrnudavr="sudo sem -NuDav @world || until sudo sem --skipfirst; do :; done"
+    alias btrnudv="sudo sem -NuDv @world || until sudo sem --resume --skipfirst; do :; done"
 
 fi
 
