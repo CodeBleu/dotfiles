@@ -147,6 +147,8 @@ alias sudo='sudo -E '
 alias vim='nvim'
 alias mandom="man \`find /usr/share/man -type f | shuf | head -1\`"
 alias mount="mount | column -t"
+alias snapld="snapper list"
+alias snapl="snapper list --disable-used-space"
 alias ctop="docker run --rm -ti \
   --name=ctop \
   --volume /var/run/docker.sock:/var/run/docker.sock:ro \
