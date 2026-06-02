@@ -1,3 +1,17 @@
 README.md
 scripts
 .config/nvim/plugin/packer_compiled.lua
+#
+# Ignore ALL __pycache__ directories anywhere
+**/__pycache__/**
+
+# Ignore ALL .mypy_cache directories anywhere
+**/.mypy_cache/**
+
+# Alternative: Ignore all Python cache files
+**/*.pyc
+#
+# Ignore backup files
+**/*.bak
+**/*.nice_bak
+**/*.use_this
