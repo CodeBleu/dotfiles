@@ -21,7 +21,8 @@ def set_wallpapers():
 mod = "mod4"
 
 # ==================== APPS ====================
-terminal = "xfce4-terminal"
+# terminal = "xfce4-terminal"
+terminal = "alacritty"
 browser = "brave-browser-stable"
 
 # ==================== COLORS ====================
@@ -76,6 +77,9 @@ keys = [
 
     # Quake alacritty
     Key(["mod1"], "1", lazy.group['scratch'].dropdown_toggle('quake'), desc="Toggle quake dropdown"),
+
+    # Lock screen
+    Key(["control", "mod1"], "l", lazy.spawn("sh -c 'dm-tool lock && dm-tool switch-to-greeter'"), desc="Lock and switch to LightDM greeter"),
 ]
 
 # ==================== GROUPS ====================
@@ -86,7 +90,8 @@ groups.append(
     ScratchPad("scratch", [
         DropDown(
             "quake",
-            "alacritty --class quake",
+            # "alacritty --class alacritty",
+            "alacritty --class Alacritty",
             width=1.0,
             height=1.0,
             x=0.0,
