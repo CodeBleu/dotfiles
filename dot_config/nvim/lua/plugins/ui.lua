@@ -88,6 +88,37 @@ return {
           always_update = false,
         },
       },
-    }
-}
+    },
 
+    {
+     "stevearc/conform.nvim",
+     event = { "BufWritePre" }, -- Load only when saving
+     cmd = { "ConformInfo" },
+     keys = {
+       {
+         "<leader>f",
+         function()
+           require("conform").format({ async = true, lsp_format = "fallback" })
+         end,
+         mode = "",
+         desc = "Format Buffer",
+       },
+     },
+     opts = {
+       -- Run formatters on save
+       format_on_save = {
+         timeout_ms = 500,
+         lsp_format = "fallback",
+       },
+       -- Define formatters by filetype
+       formatters_by_ft = {
+         -- Apply trimmers to ALL files
+         ["*"] = { "trim_whitespace", "trim_newlines" },
+
+         -- Add specific formatters for languages as needed
+         -- lua = { "stylua" },
+         -- python = { "black" },
+       },
+     },
+   },
+}
