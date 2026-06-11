@@ -3,11 +3,6 @@
 LOGFILE="/tmp/qtile-autostart.log"
 echo "$(date) === Qtile autostart started ===" >> "$LOGFILE"
 
-XDG_RUNTIME_DIR=/run/user/$(id -u)
-export XDG_RUNTIME_DIR
-eval "$(dbus-launch --sh-syntax)"
-export DBUS_SESSION_BUS_ADDRESS
-
 /usr/libexec/polkit-gnome-authentication-agent-1 >> "$LOGFILE" 2>&1 &
 #
 # kill old instances
@@ -29,10 +24,10 @@ nm-applet >> "$LOGFILE" 2>&1 &
 # flameshot >> "$LOGFILE" 2>&1 &
 
 # start light-locker
+echo "starting light-locker at $(date)" >> "$LOGFILE"
 light-locker >> "$LOGFILE" 2>&1 &
 
 # Other stuff
-# tilda >> "$LOGFILE" 2>&1 &
 xmodmap ~/.Xmodmap >> "$LOGFILE" 2>&1 &
 
 echo "$(date) === Qtile autostart finished ===" >> "$LOGFILE"

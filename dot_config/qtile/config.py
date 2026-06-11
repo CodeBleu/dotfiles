@@ -79,7 +79,7 @@ keys = [
     Key(["mod1"], "1", lazy.group['scratch'].dropdown_toggle('quake'), desc="Toggle quake dropdown"),
 
     # Lock screen
-    Key(["control", "mod1"], "l", lazy.spawn("sh -c 'dm-tool lock && dm-tool switch-to-greeter'"), desc="Lock and switch to LightDM greeter"),
+    Key(["control", "mod1"], "l", lazy.spawn("sh -c 'light-locker-command -l'"), desc="Lock screen"),
 ]
 
 # ==================== GROUPS ====================
