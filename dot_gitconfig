@@ -20,7 +20,6 @@
 	default = simple
 	gpgsign = if-asked
 [core]
-	editor = vim
 	excludesfile = ~/.gitignore
 	whitespace = trailing-space,space-before-tab
 [alias]
@@ -39,7 +38,11 @@
 	pbd = !sh -c 'git branch -d pr-$1-$2' -
 	parent = "!git show-branch -a | grep '*' | grep -v \"$(git rev-parse --abbrev-ref HEAD)\" | head -n1 | sed 's/.*\\[\\(.*\\)\\].*/\\1/' | sed 's/[\\^~].*//'"
 [diff]
-	tool = vimdiff
+    tool = nvimdiff           # Default tool (optional)
+[difftool "vimdiff"]
+    cmd = vim -d "$LOCAL" "$REMOTE"
+[difftool "nvimdiff"]
+    cmd = nvim -d "$LOCAL" "$REMOTE"
 [merge]
 	tool = vimdiff
 [mergetool]
