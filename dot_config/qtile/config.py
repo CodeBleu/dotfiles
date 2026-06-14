@@ -8,14 +8,16 @@ import subprocess, os
 
 @hook.subscribe.startup_once
 def set_wallpapers():
-    # map outputs to images
-    imgs = {
-        "eDP1": "/home/jhollis/Pictures/gentoo_background.png",
-        "HDMI1": "/home/jhollis/Pictures/gentoo_background.png",
-    }
-    # set per-output wallpaper; --stretch/--center/--zoom as  needed
-    for out, img in imgs.items():
-        subprocess.call(["xwallpaper", "--output", out, "--stretch", img])
+    import subprocess, os
+
+    # 1. First, lock in your specific arandr monitor arrangement
+    layout_script = os.path.expanduser("~/.config/qtile/monitor_setup.sh")
+    if os.path.exists(layout_script):
+        subprocess.call(["sh", layout_script])
+
+    # 2. Let nitrogen seamlessly restore the independent scaled images
+    # across your off-center screen arrangement
+    subprocess.Popen(["nitrogen", "--restore"])
 
 # ==================== MOD KEYS ====================
 mod = "mod4"
@@ -57,10 +59,10 @@ keys = [
     Key([mod, "control"], "k", lazy.layout.shuffle_up(), desc="Shuffle up"),
 
     # Resize bindings for MonadTall in Qtile 0.35
-    Key([mod, "shift"], "l", lazy.layout.grow(), desc="Grow window"),
-    Key([mod, "shift"], "h", lazy.layout.shrink(), desc="Shrink window"),
-    Key([mod, "shift"], "k", lazy.layout.grow_main(), desc="Grow main pane"),
-    Key([mod, "shift"], "j", lazy.layout.shrink_main(), desc="Shrink main pane"),
+    Key([mod, "shift"], "k", lazy.layout.grow(), desc="Grow window"),
+    Key([mod, "shift"], "j", lazy.layout.shrink(), desc="Shrink window"),
+    Key([mod, "shift"], "h", lazy.layout.grow_main(), desc="Grow main pane"),
+    Key([mod, "shift"], "l", lazy.layout.shrink_main(), desc="Shrink main pane"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all sizes"),
 
     Key([mod, "shift"], "q", lazy.window.kill(), desc="Kill window"),
@@ -80,10 +82,22 @@ keys = [
 
     # Lock screen
     Key(["control", "mod1"], "l", lazy.spawn("sh -c 'light-locker-command -l'"), desc="Lock screen"),
+
+    # Switch focus between physical monitors natively
+    Key([mod], "o", lazy.next_screen(), desc="Move focus to next screen"),
+    Key([mod], "i", lazy.prev_screen(), desc="Move focus to previous screen"),
+
+    # Simple shift right (l) and left (h)
+    Key([mod, "control", "shift"], "l",
+        lazy.window.function(lambda w: w.togroup(str(int(w.group.name) + 1), switch_group=True) if int(w.group.name) < 6 else None),
+        desc="Shift window right"),
+    Key([mod, "control", "shift"], "h",
+        lazy.window.function(lambda w: w.togroup(str(int(w.group.name) - 1), switch_group=True) if int(w.group.name) > 1 else None),
+        desc="Shift window left"),
 ]
 
 # ==================== GROUPS ====================
-group_names = ["1", "2", "3", "4", "5"]
+group_names = ["1", "2", "3", "4", "5", "6", "7", "8"]
 groups = [Group(i) for i in group_names]
 
 groups.append(
@@ -102,19 +116,37 @@ groups.append(
     ])
 )
 
-def _(_):
-    if len(qtile.screens) > 1:
-        g = qtile.current_group
-        for s in qtile.screens:
-            if s.group != g:
-                s.set_group(g)
 
-for i, g in enumerate(groups, 1):
-    keys.append(Key([mod], str(i), lazy.group[g.name].toscreen()))
-    keys.append(Key([mod, "shift"], str(i), lazy.window.togroup(g.name, switch_group=True)))
+# for i, g in enumerate(groups, 1):
+#     keys.append(Key([mod], str(i), lazy.group[g.name].toscreen()))
+#     keys.append(Key([mod, "shift"], str(i), lazy.window.togroup(g.name, switch_group=True)))
+# ==================== KEYBINDINGS FOR GROUPS ====================
+for g in groups:
+    # Skip the scratchpad so it doesn't break our number math
+    if g.name == "scratch":
+        continue
+
+    keys.extend([
+        # Mod + [1-5] = Switch to workspace
+        Key([mod], g.name, lazy.group[g.name].toscreen(),
+            desc=f"Switch to group {g.name}"),
+
+        # Mod + Shift + [1-5] = Move window to workspace
+        Key([mod, "shift"], g.name, lazy.window.togroup(g.name, switch_group=True),
+            desc=f"Move window to group {g.name}"),
+    ])
 
 # ==================== LAYOUTS ====================
 layouts = [
+    layout.MonadWide(
+        margin=8,
+        border_focus=colors["blue"],
+        border_normal=colors["muted"],
+        border_width=2,
+        ratio=0.6,
+    ),
+    layout.Max(),
+    layout.Floating(),
     layout.MonadTall(
         margin=8,
         border_focus=colors["blue"],
@@ -145,6 +177,7 @@ widget_defaults = dict(
 
 # ==================== SCREENS ====================
 screens = [
+    # Screen 0: Primary Laptop Display
     Screen(
         top=bar.Bar(
             [
@@ -163,21 +196,18 @@ screens = [
                     background=colors["bg"],
                 ),
                 widget.Sep(linewidth=1, padding=12, foreground=colors["muted"], background=colors["bg"]),
-
                 widget.CurrentLayout(
                     scale=0.7,
                     padding=8,
                     foreground=colors["fg"],
                     background=colors["bg"],
                 ),
-                widget.WindowName(
-                    padding=10,
-                    max_chars=60,
-                    background=colors["bg"]
-                ),
-
+                # widget.WindowName(
+                #     padding=10,
+                #     max_chars=60,
+                #     background=colors["bg"]
+                # ),
                 widget.Spacer(background=colors["bg"]),
-
                 widget.CPU(
                     format='CPU: {load_percent}%',
                     foreground=colors["orange"],
@@ -189,8 +219,6 @@ screens = [
                     background=colors["bg"]
                 ),
                 widget.Sep(linewidth=1, padding=12, foreground=colors["muted"], background=colors["bg"]),
-
-                # === VOLUME & BATTERY ===
                 widget.Volume(
                     format='Vol: {volume}%',
                     foreground=colors["purple"],
@@ -199,11 +227,11 @@ screens = [
                     update_interval=2,
                     unmute_format='Vol: {volume}%',
                     mute_format='Muted',
+                    mouse_callbacks={
+                        'Button3': lazy.spawn('pavucontrol')  # right-click -> open pavucontrol
+                    }
                 ),
-
                 widget.Sep(linewidth=1, padding=12, foreground=colors["muted"], background=colors["bg"]),
-
-                # Reliable Battery using system command
                 widget.GenPollText(
                     func=lambda: subprocess.check_output(
                         "echo '🔋 Bat: '$(cat /sys/class/power_supply/BAT0/capacity)'%' $(cat /sys/class/power_supply/BAT0/status | sed 's/Charging/↑/;s/Discharging/↓/;s/Full/⚡/')",
@@ -214,9 +242,7 @@ screens = [
                     background=colors["bg"],
                     padding=8,
                 ),
-
                 widget.Sep(linewidth=1, padding=12, foreground=colors["muted"], background=colors["bg"]),
-
                 widget.Clock(
                     format="%Y-%m-%d %a %I:%M %p",
                     foreground=colors["yellow"],
@@ -235,14 +261,42 @@ screens = [
             opacity=1.0,
         ),
     ),
+    # Screen 1: External Monitor Display
     Screen(
         top=bar.Bar(
             [
+                widget.GroupBox(
+                    font="DejaVu Sans Mono Bold",
+                    fontsize=13,
+                    margin_x=4,
+                    padding_x=8,
+                    padding_y=4,
+                    active=colors["fg"],
+                    inactive=colors["muted"],
+                    highlight_method="line",
+                    this_current_screen_border=colors["yellow"],
+                    urgent_border=colors["red"],
+                    rounded=False,
+                    background=colors["bg"],
+                ),
+                widget.Sep(linewidth=1, padding=12, foreground=colors["muted"], background=colors["bg"]),
                 widget.CurrentLayout(
                     scale=0.7,
                     padding=8,
                     foreground=colors["fg"],
                     background=colors["bg"],
+                ),
+                # widget.WindowName(
+                #     padding=10,
+                #     max_chars=60,
+                #     background=colors["bg"]
+                # ),
+                widget.Spacer(background=colors["bg"]),
+                widget.Clock(
+                    format="%Y-%m-%d %a %I:%M %p",
+                    foreground=colors["yellow"],
+                    padding=10,
+                    background=colors["bg"]
                 ),
             ],
             size=28,
@@ -266,7 +320,7 @@ dgroups_key_binder = None
 dgroups_app_rules: List = []
 follow_mouse_focus = True
 bring_front_click = False
-cursor_warp = False
+cursor_warp = True
 auto_fullscreen = True
 focus_on_window_activation = "smart"
 wmname = "LG3D"
