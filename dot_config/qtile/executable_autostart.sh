@@ -4,15 +4,10 @@ LOGFILE="/tmp/qtile-autostart.log"
 echo "$(date) === Qtile autostart started ===" >> "$LOGFILE"
 
 /usr/libexec/polkit-gnome-authentication-agent-1 >> "$LOGFILE" 2>&1 &
-#
-# kill old instances
-pkill -x pipewire pipewire-pulse wireplumber || true
-sleep 0.2
 
-# start PipeWire stack (no --daemon)
-pipewire &
-pipewire-pulse &
-wireplumber &
+# Start PipeWire stack the Gentoo-supported way (handles ordering, dedup, D-Bus)
+/usr/bin/gentoo-pipewire-launcher restart >> "$LOGFILE" 2>&1 &
+#
 # Start Picom (modern version - no experimental-backends)
 picom --config ~/.config/picom/picom.conf --daemon >> "$LOGFILE" 2>&1 &
 

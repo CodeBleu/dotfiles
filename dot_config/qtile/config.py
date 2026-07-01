@@ -106,10 +106,10 @@ groups.append(
             "quake",
             # "alacritty --class alacritty",
             "alacritty --class Alacritty",
-            width=1.0,
-            height=1.0,
-            x=0.0,
-            y=0.0,
+            width=1,
+            height=1,
+            x=0,
+            y=0,
             opacity=.96,
             on_focus_lost_hide=True,
         )
@@ -163,6 +163,10 @@ floating_layout = layout.Floating(
         *layout.Floating.default_float_rules,
         Match(wm_type="dialog"),
         Match(title="Confirmation"),
+        Match(wm_class="zoom"),
+        Match(title="Zoom Meeting"),
+        Match(title="Zoom - Free Account"),
+        Match(title="zoom"),
     ]
 )
 
@@ -320,7 +324,7 @@ dgroups_key_binder = None
 dgroups_app_rules: List = []
 follow_mouse_focus = True
 bring_front_click = False
-cursor_warp = True
+cursor_warp = False
 auto_fullscreen = True
 focus_on_window_activation = "smart"
 wmname = "LG3D"
