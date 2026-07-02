@@ -28,10 +28,10 @@ colors = {
     "red": "#fb4934",
     "orange": "#fe8019",
     "yellow": "#fabd2f",
-    "green": "#b8bb26",
-    "aqua": "#8ec07c",
-    "blue": "#83a598",
-    "purple": "#d3869b",
+    "green": "#36C36B",
+    "aqua": "#2EC7CC",
+    "blue": "#0044FF",
+    "purple": "#A855F7",
     "muted": "#928374",
 }
 
@@ -105,7 +105,7 @@ groups.append(
             x=0,
             y=0,
             opacity=.96,
-            on_focus_lost_hide=True,
+            on_focus_lost_hide=False,
         )
     ])
 )
@@ -147,6 +147,12 @@ layouts = [
         border_normal=colors["muted"],
         border_width=2,
         ratio=0.6,
+    ),
+    layout.Columns(
+        margin=2,
+        border_width=2,
+        border_focus=colors["blue"],
+        border_normal=colors["muted"],
     ),
     layout.Max(),
     layout.Floating(),
