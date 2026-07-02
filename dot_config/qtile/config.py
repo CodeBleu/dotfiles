@@ -9,12 +9,6 @@ import subprocess, os
 @hook.subscribe.startup_once
 def set_wallpapers():
     import subprocess, os
-
-    # 1. First, lock in your specific arandr monitor arrangement
-    layout_script = os.path.expanduser("~/.config/qtile/monitor_setup.sh")
-    if os.path.exists(layout_script):
-        subprocess.call(["sh", layout_script])
-
     # 2. Let nitrogen seamlessly restore the independent scaled images
     # across your off-center screen arrangement
     subprocess.Popen(["nitrogen", "--restore"])
