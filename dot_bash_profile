@@ -1,0 +1,16 @@
+# /etc/skel/.bash_profile
+
+# This file is sourced by bash for login shells.  The following line
+# runs your .bashrc and is recommended by the bash info pages.
+
+# 1. ONLY run ssh-add if we are NOT inside a tmux pane
+if [ -z "$TMUX" ]; then
+    if ! ssh-add -l | grep -q "cardno"; then
+        ssh-add -K
+    fi
+fi
+
+# 2. Source .bashrc (This is where Keychain will actually load!)
+if [[ -f ~/.bashrc ]] ; then
+    . ~/.bashrc
+fi
