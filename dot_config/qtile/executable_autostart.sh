@@ -18,11 +18,12 @@ sleep 0.2
 nm-applet >> "$LOGFILE" 2>&1 &
 # flameshot >> "$LOGFILE" 2>&1 &
 
+# FIX: Use nohup and disown to prevent blocking
 # start light-locker
-echo "starting light-locker at $(date)" >> "$LOGFILE"
-light-locker >> "$LOGFILE" 2>&1 &
+nohup light-locker >> "$LOGFILE" 2>&1 &
+disown
 
-# Other stuff
-xmodmap ~/.Xmodmap >> "$LOGFILE" 2>&1 &
+# FIX: Run xmodmap in a detached subshell with a delay
+( sleep 2 && xmodmap ~/.Xmodmap ) >> "$LOGFILE" 2>&1 &
 
 echo "$(date) === Qtile autostart finished ===" >> "$LOGFILE"
