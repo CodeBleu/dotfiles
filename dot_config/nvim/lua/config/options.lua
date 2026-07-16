@@ -51,4 +51,3 @@ opt.foldenable = false
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
-

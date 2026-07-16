@@ -77,3 +77,17 @@ map("n", "<localleader>cc", function()
     end
 end)
 
+-- telescope diagnostics
+-- not working right now for some reason
+-- leaving in for when VIM is upgraded later
+vim.keymap.set('n', '<leader>dd', function()
+  require('telescope.builtin').diagnostics({
+    bufnr = 0,       -- Current buffer only
+    severity = nil,  -- Show Error, Warn, Info, and Hint
+  })
+end)
+
+-- Simple diagnostics in scratch buffer until above is working
+vim.keymap.set('n', '<localleader>dd', function()
+  vim.diagnostic.setloclist({ open = true })
+end)

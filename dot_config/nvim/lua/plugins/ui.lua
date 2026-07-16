@@ -91,6 +91,12 @@ return {
     },
 
     {
+      'nvim-telescope/telescope.nvim',
+      tag = '0.1.2',
+      dependencies = { 'nvim-lua/plenary.nvim' }
+    },
+
+    {
      "stevearc/conform.nvim",
      event = { "BufWritePre" }, -- Load only when saving
      cmd = { "ConformInfo" },

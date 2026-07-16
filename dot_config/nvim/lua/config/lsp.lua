@@ -1,4 +1,9 @@
-vim.lsp.config("lua_ls", {})
+vim.lsp.config("lua_ls", {
+  cmd = { "lua-language-server" },
+  settings = {
+    Lua = { diagnostics = { globals = { "vim" } } },
+  },
+})
 vim.lsp.enable("lua_ls")
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -22,3 +27,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
     end,
 })
+
+vim.lsp.config("ansiblels", {
+  settings = {
+    ansible = {
+      ansible = { path = "ansible" },
+      python = { interpreterPath = "python3" },
+      executionEnvironment = { enabled = false },
+    },
+    ansibleLint = {
+      enabled = true,
+      path = "ansible-lint",
+    },
+  },
+})
+vim.lsp.enable("ansiblels")
