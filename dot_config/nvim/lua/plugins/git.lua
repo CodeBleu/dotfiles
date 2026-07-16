@@ -24,7 +24,7 @@ return {
             {
                 "]c",
                 function()
-                    require("gitsigns").next_hunk()
+                    require("gitsigns").nav_hunk("next", { target = "all" })
                 end,
                 desc = "Next hunk",
             },
@@ -32,7 +32,7 @@ return {
             {
                 "[c",
                 function()
-                    require("gitsigns").prev_hunk()
+                    require("gitsigns").nav_hunk("prev", { target = "all" })
                 end,
                 desc = "Previous hunk",
             },
@@ -67,6 +67,13 @@ return {
                     require("gitsigns").reset_hunk()
                 end,
                 desc = "Reset hunk",
+            },
+            {
+                "<localleader>gS",
+                function()
+                    require("gitsigns").stage_hunk()
+                end,
+                desc = "Stage hunk",
             },
         },
     },
