@@ -45,6 +45,7 @@ map("n", "<Down>", "<Nop>")
 
 -- Better escape
 map("i", "kj", "<Esc>")
+map("v", "kj", "<Esc>")
 
 -- Save
 map("n", "<leader>w", "<cmd>w<CR>")
