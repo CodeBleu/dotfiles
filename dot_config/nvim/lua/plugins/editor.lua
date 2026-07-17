@@ -46,5 +46,31 @@ return {
         end,
     },
 
+    {
+        "Exafunction/windsurf.nvim",
+        dependencies = {
+          "nvim-lua/plenary.nvim",
+          "hrsh7th/nvim-cmp",
+        },
+        config = function()
+          require("codeium").setup({
+            -- Turn off the cmp popup source since virtual text replaces it
+            enable_cmp_source = false,
+            virtual_text = {
+              enabled = true,
+              manual = false, -- false = show automatically, not just on-demand
+              default_filetype_enabled = true,
+              idle_delay = 75, -- ms after you stop typing before it suggests
+              key_bindings = {
+                accept = "<Tab>",
+                accept_word = false,
+                accept_line = false,
+                clear = false,
+                next = "<M-]>",
+                prev = "<M-[>",
+              },
+            },
+          })
+        end,
+      }
 }
-
