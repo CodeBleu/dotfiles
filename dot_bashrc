@@ -61,8 +61,11 @@ if [[ -f /usr/bin/virtualenvwrapper.sh ]]; then
     source /usr/bin/virtualenvwrapper.sh
 fi
 
-if [[ -f /usr/bin/bat ]]; then
-    alias cat="/usr/bin/bat --theme 'Solarized (dark)'"
+if [[ -x /usr/bin/bat ]]; then
+    alias cat="bat --theme 'Solarized (dark)'"
+elif
+    [[ -x /usr/bin/batcat ]]; then
+    alias cat="batcat --theme 'Solarized (dark)'"
 fi
 
 if [[ -f $HOME/.workrelated ]]; then
