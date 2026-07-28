@@ -6,12 +6,91 @@ from libqtile.config import Key, Group, ScratchPad, Match, Screen, Drag, Click, 
 from libqtile.lazy import lazy
 import subprocess, os
 
+def get_num_monitors() -> int:
+    """Count connected monitors via xrandr. Falls back to 1 on any failure."""
+    try:
+        out = subprocess.check_output(
+            ["xrandr", "--query"], text=True, timeout=3
+        )
+        count = sum(1 for line in out.splitlines() if " connected" in line)
+        return max(count, 1)
+    except Exception:
+        return 1
+
 @hook.subscribe.startup_once
 def set_wallpapers():
     import subprocess, os
     # 2. Let nitrogen seamlessly restore the independent scaled images
     # across your off-center screen arrangement
     subprocess.Popen(["nitrogen", "--restore"])
+
+from libqtile.log_utils import logger
+import threading
+
+_screen_change_timer = None
+_MONITOR_COUNT_FILE = "/tmp/qtile_last_monitor_count"
+
+def _read_last_monitor_count():
+    try:
+        with open(_MONITOR_COUNT_FILE) as f:
+            return int(f.read().strip())
+    except Exception:
+        return None
+
+def _write_last_monitor_count(count):
+    try:
+        with open(_MONITOR_COUNT_FILE, "w") as f:
+            f.write(str(count))
+    except Exception:
+        pass
+
+def _apply_screen_change():
+    """
+    The actual work, run once ~1 second after the LAST screen_change event
+    in a burst (see on_screen_change below for why this is debounced).
+
+    IMPORTANT LOOP GUARD: qtile.restart() re-execs the whole process, and
+    the fresh process detects the current screen layout as a "change" on
+    startup, firing screen_change again immediately - which without a
+    guard would restart forever. To prevent that, the current monitor
+    count gets written to a small file, and a restart only happens if the
+    count is actually different from what was last recorded. After a
+    restart, the count matches what was just written, so the startup-time
+    firing sees "no real change" and does nothing.
+    """
+    current_count = get_num_monitors()
+    last_count = _read_last_monitor_count()
+
+    if last_count == current_count:
+        return
+
+    _write_last_monitor_count(current_count)
+    subprocess.run(["autorandr", "--change"])
+
+    # NOTE: qtile 0.35 exposes this as restart() - the cmd_ prefix used in
+    # older qtile versions was dropped. If you upgrade/downgrade qtile and
+    # this starts throwing AttributeError again, check the log for the
+    # exact error - it'll tell you the actual method name to use.
+    from libqtile import qtile
+    qtile.restart()
+
+    subprocess.Popen(["nitrogen", "--restore"])
+
+@hook.subscribe.screen_change
+def on_screen_change(*args, **kwargs):
+    """
+    Fires whenever xrandr sees a monitor connected/disconnected. A single
+    physical plug/unplug typically fires this MANY times in quick
+    succession (mode negotiation, EDID reads, etc - your log showed ~15-20
+    firings for one hotplug), so instead of acting immediately, this
+    resets a 1-second timer on every firing and only actually runs
+    _apply_screen_change() once things go quiet for a full second.
+    """
+    global _screen_change_timer
+    if _screen_change_timer is not None:
+        _screen_change_timer.cancel()
+    _screen_change_timer = threading.Timer(1.0, _apply_screen_change)
+    _screen_change_timer.start()
 
 # ==================== MOD KEYS ====================
 mod = "mod4"
@@ -81,24 +160,62 @@ keys = [
     Key([mod], "o", lazy.next_screen(), desc="Move focus to next screen"),
     Key([mod], "i", lazy.prev_screen(), desc="Move focus to previous screen"),
 
-    # Simple shift right (l) and left (h)
+    # Scalable group cycling - works no matter how many groups you have.
+    # This is the safe way to move beyond 9 groups (see note below on why
+    # numeric key bindings top out at 10).
+    Key([mod], "bracketright", lazy.screen.next_group(), desc="Next group"),
+    Key([mod], "bracketleft", lazy.screen.prev_group(), desc="Previous group"),
+
+    # Shift the focused window to the group immediately after/before the
+    # current one in `group_names`. Works by position in the list rather
+    # than int() math, so it's safe now that group names can be letters
+    # ("a", "s", ...) as well as numbers.
     Key([mod, "control", "shift"], "l",
-        lazy.window.function(lambda w: w.togroup(str(int(w.group.name) + 1), switch_group=True) if int(w.group.name) < 6 else None),
+        lazy.window.function(lambda w: w.togroup(
+            group_names[group_names.index(w.group.name) + 1], switch_group=True
+        ) if group_names.index(w.group.name) < len(group_names) - 1 else None),
         desc="Shift window right"),
     Key([mod, "control", "shift"], "h",
-        lazy.window.function(lambda w: w.togroup(str(int(w.group.name) - 1), switch_group=True) if int(w.group.name) > 1 else None),
+        lazy.window.function(lambda w: w.togroup(
+            group_names[group_names.index(w.group.name) - 1], switch_group=True
+        ) if group_names.index(w.group.name) > 0 else None),
         desc="Shift window left"),
 ]
 
 # ==================== GROUPS ====================
-group_names = ["1", "2", "3", "4", "5", "6", "7", "8"]
+# IMPORTANT: Key() bindings require a valid X keysym name. "1".."9" and "0"
+# are valid single keysyms, but "10", "11", etc are NOT valid keysym names.
+# Binding Key([mod], "10", ...) fails keysym lookup, which breaks qtile's
+# config load entirely -> X session fails to start -> you get bounced back
+# to lightdm. This is why the pool below sticks to single characters only.
+#
+# GROUPS_PER_MONITOR groups are created for EACH connected monitor, so the
+# total group count scales automatically: 1 monitor = 4 groups, 2 = 8,
+# 3 = 12, etc. This is recalculated on every qtile restart (including the
+# automatic one from the screen_change hook), so plugging in another
+# monitor and letting autorandr/qtile restart will grow the group count
+# without editing this file.
+#
+# KEY_POOL is the order groups get named in: digits first, then a hand
+# -picked set of letters that don't collide with any letter already bound
+# under `mod` elsewhere in this file (b, f, h, i, j, k, l, n, o, q, r are
+# all taken, so they're deliberately excluded here). Add more letters to
+# the end of this pool if you ever need more than 25 total groups.
+KEY_POOL = [
+    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
+    "a", "s", "d", "g", "e", "c", "m", "p", "t", "u",
+    "v", "w", "x", "y", "z",
+]
+GROUPS_PER_MONITOR = 4
+
+_total_groups = min(GROUPS_PER_MONITOR * get_num_monitors(), len(KEY_POOL))
+group_names = KEY_POOL[:_total_groups]
 groups = [Group(i) for i in group_names]
 
 groups.append(
     ScratchPad("scratch", [
         DropDown(
             "quake",
-            # "alacritty --class alacritty",
             "alacritty --class Alacritty",
             width=1,
             height=1,
@@ -110,10 +227,6 @@ groups.append(
     ])
 )
 
-
-# for i, g in enumerate(groups, 1):
-#     keys.append(Key([mod], str(i), lazy.group[g.name].toscreen()))
-#     keys.append(Key([mod, "shift"], str(i), lazy.window.togroup(g.name, switch_group=True)))
 # ==================== KEYBINDINGS FOR GROUPS ====================
 for g in groups:
     # Skip the scratchpad so it doesn't break our number math
@@ -121,14 +234,46 @@ for g in groups:
         continue
 
     keys.extend([
-        # Mod + [1-5] = Switch to workspace
+        # Mod + <key> = Switch to workspace
         Key([mod], g.name, lazy.group[g.name].toscreen(),
             desc=f"Switch to group {g.name}"),
 
-        # Mod + Shift + [1-5] = Move window to workspace
+        # Mod + Shift + <key> = Move window to workspace
         Key([mod, "shift"], g.name, lazy.window.togroup(g.name, switch_group=True),
             desc=f"Move window to group {g.name}"),
     ])
+
+@hook.subscribe.startup
+def prune_stale_groups():
+    """
+    Runs on EVERY qtile startup, including the internal restarts triggered
+    by on_screen_change - this is the real fix for groups not shrinking
+    after a monitor is unplugged.
+
+    Why this is needed: qtile.restart() preserves session state across the
+    restart, and it turns out that preservation keeps EVERY previously
+    existing group around (even empty ones), not just groups that still
+    have windows - it only naturally drops whichever group was actively
+    displayed on a screen that no longer exists. So after going from 3
+    monitors/12 groups down to 1 monitor/4 groups, you'd still see ~11
+    leftover empty groups instead of 4.
+
+    This hook cleans that up: after every startup, anything not in the
+    current `group_names` (or the scratchpad) gets deleted - but ONLY if
+    it's actually empty. A stale group that still has real windows on it
+    is left alone, so you never lose access to a window this way.
+    """
+    from libqtile import qtile
+    valid_names = set(group_names) | {"scratch"}
+    for g in list(qtile.groups):
+        if g.name in valid_names:
+            continue
+        if g.windows:
+            continue
+        try:
+            qtile.delete_group(g.name)
+        except Exception as e:
+            logger.warning(f"Failed to prune stale group '{g.name}': {e}")
 
 # ==================== LAYOUTS ====================
 layouts = [
@@ -179,137 +324,116 @@ widget_defaults = dict(
     foreground=colors["fg"],
 )
 
-# ==================== SCREENS ====================
-screens = [
-    # Screen 0: Primary Laptop Display
-    Screen(
-        top=bar.Bar(
-            [
-                widget.GroupBox(
-                    font="DejaVu Sans Mono Bold",
-                    fontsize=13,
-                    margin_x=4,
-                    padding_x=8,
-                    padding_y=4,
-                    active=colors["fg"],
-                    inactive=colors["muted"],
-                    highlight_method="line",
-                    this_current_screen_border=colors["yellow"],
-                    urgent_border=colors["red"],
-                    rounded=False,
-                    background=colors["bg"],
-                ),
-                widget.Sep(linewidth=1, padding=12, foreground=colors["muted"], background=colors["bg"]),
-                widget.CurrentLayout(
-                    scale=0.7,
-                    padding=8,
-                    foreground=colors["fg"],
-                    background=colors["bg"],
-                ),
-                # widget.WindowName(
-                #     padding=10,
-                #     max_chars=60,
-                #     background=colors["bg"]
-                # ),
-                widget.Spacer(background=colors["bg"]),
-                widget.CPU(
-                    format='CPU: {load_percent}%',
-                    foreground=colors["orange"],
-                    background=colors["bg"]
-                ),
-                widget.Memory(
-                    format='RAM: {MemUsed:.0f}M',
-                    foreground=colors["aqua"],
-                    background=colors["bg"]
-                ),
-                widget.Sep(linewidth=1, padding=12, foreground=colors["muted"], background=colors["bg"]),
-                widget.Volume(
-                    format='Vol: {volume}%',
-                    foreground=colors["purple"],
-                    background=colors["bg"],
-                    padding=8,
-                    update_interval=2,
-                    unmute_format='Vol: {volume}%',
-                    mute_format='Muted',
-                    mouse_callbacks={
-                        'Button3': lazy.spawn('pavucontrol')  # right-click -> open pavucontrol
-                    }
-                ),
-                widget.Sep(linewidth=1, padding=12, foreground=colors["muted"], background=colors["bg"]),
-                widget.GenPollText(
-                    func=lambda: subprocess.check_output(
-                        "echo '🔋 Bat: '$(cat /sys/class/power_supply/BAT0/capacity)'%' $(cat /sys/class/power_supply/BAT0/status | sed 's/Charging/↑/;s/Discharging/↓/;s/Full/⚡/')",
-                        shell=True, text=True
-                    ).strip(),
-                    update_interval=5,
-                    foreground=colors["green"],
-                    background=colors["bg"],
-                    padding=8,
-                ),
-                widget.Sep(linewidth=1, padding=12, foreground=colors["muted"], background=colors["bg"]),
-                widget.Clock(
-                    format="%Y-%m-%d %a %I:%M %p",
-                    foreground=colors["yellow"],
-                    padding=10,
-                    background=colors["bg"]
-                ),
-                widget.Systray(
-                    padding=8,
-                    icon_size=18,
-                    background=colors["bg"]
-                ),
-            ],
-            size=28,
-            background=colors["bg"],
-            margin=[0, 0, 0, 0],
-            opacity=1.0,
-        ),
-    ),
-    # Screen 1: External Monitor Display
-    Screen(
-        top=bar.Bar(
-            [
-                widget.GroupBox(
-                    font="DejaVu Sans Mono Bold",
-                    fontsize=13,
-                    margin_x=4,
-                    padding_x=8,
-                    padding_y=4,
-                    active=colors["fg"],
-                    inactive=colors["muted"],
-                    highlight_method="line",
-                    this_current_screen_border=colors["yellow"],
-                    urgent_border=colors["red"],
-                    rounded=False,
-                    background=colors["bg"],
-                ),
-                widget.Sep(linewidth=1, padding=12, foreground=colors["muted"], background=colors["bg"]),
-                widget.CurrentLayout(
-                    scale=0.7,
-                    padding=8,
-                    foreground=colors["fg"],
-                    background=colors["bg"],
-                ),
-                # widget.WindowName(
-                #     padding=10,
-                #     max_chars=60,
-                #     background=colors["bg"]
-                # ),
-                widget.Spacer(background=colors["bg"]),
-                widget.Clock(
-                    format="%Y-%m-%d %a %I:%M %p",
-                    foreground=colors["yellow"],
-                    padding=10,
-                    background=colors["bg"]
-                ),
-            ],
-            size=28,
-            background=colors["bg"],
-            margin=[0, 0, 0, 0],
-            opacity=1.0,
-        ),
+# ==================== DYNAMIC SCREEN / BAR GENERATION ====================
+# Instead of hand-copying a Screen(...) block per monitor, we build one
+# Screen per detected monitor (get_num_monitors() is defined up near the
+# top of the file, right before KEYBINDINGS, since GROUPS needs it too).
+
+def make_groupbox():
+    return widget.GroupBox(
+        font="DejaVu Sans Mono Bold",
+        fontsize=13,
+        margin_x=4,
+        padding_x=8,
+        padding_y=4,
+        active=colors["fg"],
+        inactive=colors["muted"],
+        highlight_method="line",
+        this_current_screen_border=colors["yellow"],
+        urgent_border=colors["red"],
+        rounded=False,
+        background=colors["bg"],
     )
-]
+
+
+def make_sep():
+    return widget.Sep(linewidth=1, padding=12, foreground=colors["muted"], background=colors["bg"])
+
+
+def make_clock():
+    """
+    Returns a LIST of widgets (not one) so date and time can be styled
+    slightly differently without any background box - just a muted date
+    and a bold yellow time, both sitting flat on the bar. Callers should
+    splat this into the widgets list: *make_clock()
+    """
+    return [
+        widget.Clock(
+            format="%Y-%m-%d %a",
+            font="DejaVu Sans Mono",
+            fontsize=12,
+            foreground=colors["muted"],
+            background=colors["bg"],
+            padding=8,
+        ),
+        widget.Clock(
+            format="%I:%M %p",
+            font="DejaVu Sans Mono Bold",
+            fontsize=13,
+            foreground=colors["yellow"],
+            background=colors["bg"],
+            padding=8,
+        ),
+    ]
+
+
+def make_bar(primary: bool):
+    """
+    Same bar everywhere - CPU, RAM, volume, battery, clock - on every
+    screen. The one exception is Systray, which only gets added on the
+    primary screen: running a systray on more than one bar at once is a
+    known qtile limitation (tray icons can duplicate or misbehave), not
+    a style choice, so it's kept singular here.
+    """
+    widgets = [
+        make_groupbox(),
+        make_sep(),
+        widget.CurrentLayout(scale=0.7, padding=8, foreground=colors["fg"], background=colors["bg"]),
+        widget.Spacer(background=colors["bg"]),
+        widget.CPU(format='CPU: {load_percent}%', foreground=colors["orange"], background=colors["bg"]),
+        widget.Memory(format='RAM: {MemUsed:.0f}M', foreground=colors["aqua"], background=colors["bg"]),
+        make_sep(),
+        widget.Volume(
+            format='Vol: {volume}%',
+            foreground=colors["purple"],
+            background=colors["bg"],
+            padding=8,
+            update_interval=2,
+            unmute_format='Vol: {volume}%',
+            mute_format='Muted',
+            mouse_callbacks={'Button3': lazy.spawn('pavucontrol')},
+        ),
+        make_sep(),
+        widget.GenPollText(
+            func=lambda: subprocess.check_output(
+                "echo '🔋 Bat: '$(cat /sys/class/power_supply/BAT0/capacity)'%' $(cat /sys/class/power_supply/BAT0/status | sed 's/Charging/↑/;s/Discharging/↓/;s/Full/⚡/')",
+                shell=True, text=True
+            ).strip(),
+            update_interval=5,
+            foreground=colors["green"],
+            background=colors["bg"],
+            padding=8,
+        ),
+        make_sep(),
+        *make_clock(),
+    ]
+
+    if primary:
+        widgets.append(widget.Systray(padding=8, icon_size=18, background=colors["bg"]))
+
+    return bar.Bar(
+        widgets,
+        size=28,
+        background=colors["bg"],
+        margin=[0, 0, 0, 0],
+        opacity=1.0,
+    )
+
+
+# ==================== SCREENS ====================
+# Builds one Screen per detected monitor - add a 4th, 5th monitor and this
+# just picks it up on the next qtile restart, no editing required.
+screens = [Screen(top=make_bar(primary=(i == 0))) for i in range(get_num_monitors())]
 
 # ==================== MOUSE ====================
 mouse = [
