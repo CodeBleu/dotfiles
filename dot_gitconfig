@@ -2,8 +2,10 @@
 	name = Jason Hollis
 	email = 400979+CodeBleu@users.noreply.github.com
 	signingkey = "1B59AA074288D09B"
-# [includeIf "gitdir:work/"]
-# 	path = ~/.gitconfig-work
+[includeIf "gitdir:work/"]
+    path = ~/.gitconfig-work
+[includeIf "gitdir:TMTG/"]
+	path = ~/.gitconfig-work
 # [includeIf "gitdir:AC/"]
 # 	path = ~/.gitconfig-work
 # [includeIf "gitdir:SDS/"]

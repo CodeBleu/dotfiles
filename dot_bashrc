@@ -10,6 +10,17 @@
 # Test for an interactive shell.  There is no need to set anything
 # past this point for scp and rcp, and it's important to refrain from
 # outputting anything in those cases.
+
+txtcyn=$'\e[36m' #cyan
+txtgrn=$'\e[32m' #green
+txtylw=$'\e[33m' #yellow
+txtred=$'\e[31m' #red
+Iblu=$'\e[94m' #High Intensity Blu
+Icyn=$'\e[96m' #High Intensity Cyan
+txtdarkgrey=$'\e[90m'
+reset=$'\e[m'
+
+
 if [[ $- != *i* ]] ; then
     # Shell is non-interactive.  Be done now!
     return
@@ -40,16 +51,6 @@ export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 # Put your fun stuff here.
 # Fix long line wrapping issues: https://askubuntu.com/questions/111840/ps1-problem-messing-up-cli
 #                                https://askubuntu.com/questions/251154/long-lines-overlap-in-bash-ps1-customized-prompt
-
-txtcyn=$'\e[36m' #cyan
-txtgrn=$'\e[32m' #green
-txtylw=$'\e[33m' #yellow
-txtred=$'\e[31m' #red
-Iblu=$'\e[94m' #High Intensity Blu
-Icyn=$'\e[96m' #High Intensity Cyan
-txtdarkgrey=$'\e[90m'
-reset=$'\e[m'
-
 # . ~/.vim/bundle/powerline/powerline/bindings/bash/powerline.sh
 # export POWERLINE_CONFIG_COMMAND=$HOME/.vim/bundle/powerline/scripts/powerline-config
 
@@ -62,6 +63,11 @@ fi
 
 if [[ -f /usr/bin/bat ]]; then
     alias cat="/usr/bin/bat --theme 'Solarized (dark)'"
+fi
+
+if [[ -f $HOME/.workrelated ]]; then
+    #shellcheck disable=SC1091
+    source "$HOME/.workrelated"
 fi
 
 
@@ -172,13 +178,7 @@ if [[ "$KERNEL" =~ "Microsoft" ]]; then
     fi
 fi
 
-if [[ -f $HOME/.workrelated ]]; then
-    #shellcheck disable=SC1091
-    source "$HOME/.workrelated"
-fi
-
 eval "$(direnv hook bash)"
-
 
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
