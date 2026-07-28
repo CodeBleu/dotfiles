@@ -55,6 +55,7 @@ return {
                             ["q"] = actions.close,
                             ["<C-d>"] = actions.preview_scrolling_down,
                             ["<C-u>"] = actions.preview_scrolling_up,
+                            ["dd"] = actions.delete_buffer,
                         },
                     },
                     layout_strategy = "horizontal",
