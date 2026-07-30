@@ -93,8 +93,21 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 })
 
 -- For Ansible
+-- For Ansible
 vim.filetype.add({
   pattern = {
     [".*/ansible/.*%.ya?ml"] = "yaml.ansible",
+  },
+  extension = {
+      yml = function(path)
+      if vim.fs.find("ansible.cfg", { path = vim.fs.dirname(path), upward = true })[1] then
+        return "yaml.ansible"
+      end
+    end,
+    yaml = function(path)
+      if vim.fs.find("ansible.cfg", { path = vim.fs.dirname(path), upward = true })[1] then
+        return "yaml.ansible"
+      end
+    end,
   },
 })
