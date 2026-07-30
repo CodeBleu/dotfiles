@@ -38,6 +38,20 @@ return {
                 end,
                 desc = "Search current buffer",
             },
+            {
+                "<localleader>dd",
+                function()
+                    local builtin = require("telescope.builtin")
+                    local diagnostic = vim.diagnostic
+
+                    -- 1. Explicitly send current buffer diagnostics to the Quick Fix list
+                    diagnostic.setqflist({ bufnr = 0, open = false })
+
+                    -- 2. Open Telescope's 'quickfix' picker
+                    builtin.quickfix({ prompt_title = "Diagnostics (Current Buffer)" })
+                end,
+                desc = "Diagnostics (Current Buffer)",
+            },
         },
 
         config = function()
