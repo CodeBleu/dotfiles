@@ -393,15 +393,17 @@ def make_bar(primary: bool):
         widget.CPU(format='CPU: {load_percent}%', foreground=colors["orange"], background=colors["bg"]),
         widget.Memory(format='RAM: {MemUsed:.0f}M', foreground=colors["aqua"], background=colors["bg"]),
         make_sep(),
-        widget.Volume(
+        widget.PulseVolume(
             format='Vol: {volume}%',
+            mute_format='Muted',
             foreground=colors["purple"],
             background=colors["bg"],
             padding=8,
             update_interval=2,
             unmute_format='Vol: {volume}%',
-            mute_format='Muted',
-            mouse_callbacks={'Button3': lazy.spawn('pavucontrol')},
+            mouse_callbacks={
+                'Button3': lazy.spawn('pavucontrol'), # Keep right-click for pavucontrol
+            }
         ),
         make_sep(),
         widget.GenPollText(
