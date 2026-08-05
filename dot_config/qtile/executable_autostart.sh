@@ -16,11 +16,10 @@ sleep 0.2
 
 # Start applets
 nm-applet >> "$LOGFILE" 2>&1 &
-# flameshot >> "$LOGFILE" 2>&1 &
 
 # start light-locker
 light-locker >> "$LOGFILE" 2>&1 &
 
-( sleep 2 && xmodmap ~/.Xmodmap ) >> "$LOGFILE" 2>&1 &
+dunst >> "$LOGFILE" 2>&1 &
 
 echo "$(date) === Qtile autostart finished ===" >> "$LOGFILE"
