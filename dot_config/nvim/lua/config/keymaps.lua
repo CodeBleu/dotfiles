@@ -77,3 +77,8 @@ map("n", "<localleader>cc", function()
         vim.o.colorcolumn = ""
     end
 end)
+
+-- keymapping for markdownpreview commands
+map("n", "<localleader>mp", "<cmd>MarkdownPreview<CR>")
+map("n", "<localleader>ms", "<cmd>MarkdownPreviewStop<CR>")
+map("n", "<localleader>mt", "<cmd>MarkdownPreviewToggle<CR>")
