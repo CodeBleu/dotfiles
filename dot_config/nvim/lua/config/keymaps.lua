@@ -78,7 +78,7 @@ map("n", "<localleader>cc", function()
     end
 end)
 
--- keymapping for markdownpreview commands
-map("n", "<localleader>mp", "<cmd>MarkdownPreview<CR>")
-map("n", "<localleader>ms", "<cmd>MarkdownPreviewStop<CR>")
-map("n", "<localleader>mt", "<cmd>MarkdownPreviewToggle<CR>")
+-- Live Preview (brianhuster/live-preview.nvim)
+map("n", "<localleader>ms", "<cmd>LivePreview start<CR>",  { desc = "Preview Start" })
+map("n", "<localleader>mc", "<cmd>LivePreview close<CR>",  { desc = "Preview Close" })
+map("n", "<localleader>mp", "<cmd>LivePreview pick<CR>",  { desc = "Preview Close" })

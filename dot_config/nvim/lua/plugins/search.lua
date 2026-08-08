@@ -58,6 +58,10 @@ return {
             local actions = require("telescope.actions")
             require("telescope").setup({
                 defaults = {
+                    -- Disable treesitter in previews (fixes the ft_to_lang crash)
+                    preview = {
+                      treesitter = false,
+                    },
                     mappings = {
                         i = {
                             ["<C-d>"] = actions.preview_scrolling_down,
